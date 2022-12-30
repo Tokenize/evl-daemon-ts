@@ -23,3 +23,21 @@ test("ParseChecksum with invalid input returns empty checksum", () => {
 
   expect(checksum.value).toBe("");
 });
+
+test("ParseData with valid input returns data", () => {
+  const data = tpi.ParseData("005123456AB");
+
+  expect(data.value).toBe("123456");
+});
+
+test("ParseData with no data returns empty data object", () => {
+  const data = tpi.ParseData("510AB");
+
+  expect(data.value).toBe("");
+});
+
+test("ParseData with invalid input returns empty data object", () => {
+  const data = tpi.ParseData("510");
+
+  expect(data.value).toBe("");
+});

@@ -27,4 +27,17 @@ export default abstract class Tpi {
 
     return { value: checksum };
   }
+
+  public static ParseData(input: string): Data {
+    let data = "";
+
+    if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
+      data = input.substring(
+        this.COMMAND_LENGTH,
+        input.length - this.CHECKSUM_LENGTH
+      );
+    }
+
+    return { value: data, zone: "", partition: 0 };
+  }
 }
