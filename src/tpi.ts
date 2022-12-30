@@ -1,16 +1,30 @@
-import { Command } from "./models";
+import { Command, Data, Payload, Checksum } from "./models";
 
-export abstract class Tpi {
-  public static CommandLength = 3;
-  public static ChecksumLength = 2;
+export default abstract class Tpi {
+  public static COMMAND_LENGTH = 3;
+
+  public static CHECKSUM_LENGTH = 2;
 
   public static ParseCommand(input: string): Command {
-    const command: Command = { value: "" };
+    let command = "";
 
-    if (input.length < this.CommandLength + this.ChecksumLength) {
-      // throw some kind of error
+    if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
+      command = input.substring(0, this.COMMAND_LENGTH);
     }
 
-    return command;
+    return { command: command };
+  }
+
+  public static ParseChecksum(input: string): Checksum {
+    let checksum = "";
+
+    if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
+      checksum = input.substring(
+        input.length - this.CHECKSUM_LENGTH,
+        input.length
+      );
+    }
+
+    return { value: checksum };
   }
 }

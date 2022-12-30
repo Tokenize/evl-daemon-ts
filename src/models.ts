@@ -1,4 +1,10 @@
 export interface Command {
+  command: string;
+}
+
+export interface Data {
+  partition: number;
+  zone: string;
   value: string;
 }
 
@@ -6,18 +12,8 @@ export interface Checksum {
   value: string;
 }
 
-export interface Data {
-  value: string;
-}
-
-export interface Event {
+export interface Payload {
   command: Command;
-  data: Data;
-  length: number;
-}
-
-export interface Packet {
-  command: Event;
   data: Data;
   checksum: Checksum;
 }
