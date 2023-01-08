@@ -5,7 +5,7 @@ export default abstract class Tpi {
 
   public static CHECKSUM_LENGTH = 2;
 
-  public static ParseCommand(input: string): Command {
+  public static parseCommand(input: string): Command {
     let command = "";
 
     if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
@@ -15,7 +15,7 @@ export default abstract class Tpi {
     return { command: command };
   }
 
-  public static ParseChecksum(input: string): Checksum {
+  public static parseChecksum(input: string): Checksum {
     let checksum = "";
 
     if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
@@ -28,7 +28,7 @@ export default abstract class Tpi {
     return { value: checksum };
   }
 
-  public static ParseData(input: string): Data {
+  public static parseData(input: string): Data {
     let data = "";
 
     if (input.length >= this.COMMAND_LENGTH + this.CHECKSUM_LENGTH) {
