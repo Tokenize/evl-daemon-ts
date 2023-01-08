@@ -1,19 +1,19 @@
-export interface Command {
+export type Command = {
   command: string;
-}
+};
 
-export interface Data {
+export type Data = {
   partition: number;
   zone: string;
   value: string;
-}
+};
 
-export interface Checksum {
+export type Checksum = {
   value: string;
-}
+};
 
-export interface Payload {
+export type Payload = {
   command: Command;
   data: Data;
   checksum: Checksum;
-}
+};
