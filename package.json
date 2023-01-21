@@ -2,12 +2,13 @@
   "name": "evl-daemon-ts",
   "version": "0.0.1",
   "description": "An EvlDaemon implementation written in TypeScript",
-  "main": "evldaemon.js",
+  "main": "./dist/cli.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Tokenize/evl-daemon-ts.git"
   },
   "scripts": {
+    "start": "tsc && node ./dist/cli.js",
     "test": "jest"
   },
   "author": "Mike Farr <mike@tokenize.ca>",
@@ -15,7 +16,7 @@
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^29.0.3",
-    "@types/node": "^18.7.19",
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
     "eslint": "^8.24.0",
