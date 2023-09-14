@@ -1,0 +1,23 @@
+{
+  "name": "evl-daemon-ts",
+  "version": "0.0.1",
+  "description": "An Envisalink EVL daemon written in TypeScript.",
+  "main": "app.js",
+  "repository": "https://github.com/mfarr/evl-daemon-ts.git",
+  "author": "Mike Farr <mike@noneleft.ca>",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.1",
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}
