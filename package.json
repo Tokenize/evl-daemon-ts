@@ -11,6 +11,12 @@
     "name": "Mike Farr",
     "email": "mike@noneleft.ca"
   },
+  "scripts": {
+    "cli": "tsc && node ./dist/cli.js",
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "test": "jest"
+  },
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@tsconfig/node-lts": "^18.12.5",
