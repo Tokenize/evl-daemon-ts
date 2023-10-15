@@ -1,14 +1,10 @@
-export type Command = {
-  command: string;
-};
+export type Command = string;
+
+export type Checksum = string;
 
 export type Data = {
   partition: number;
   zone: string;
-  value: string;
-};
-
-export type Checksum = {
   value: string;
 };
 
