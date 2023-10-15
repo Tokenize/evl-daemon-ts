@@ -5,6 +5,7 @@ import {
   parseCommand,
   parseData,
   parsePartition,
+  parseZone,
   validate,
 } from "../tpi";
 
@@ -66,6 +67,21 @@ test("parsePartition should return 0 with invalid input", () => {
   const actual = parsePartition("");
 
   expect(actual).toEqual(0);
+});
+
+test("parseZone should return the zone with valid input", () => {
+  const value = "005";
+  const expected = "005";
+
+  const actual = parseZone(value);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseZone should return an empty string with invalid input", () => {
+  const value = "10";
+  const actual = parseZone(value);
+  expect(actual).toEqual("");
 });
 
 test("getPayload should return a payload from the given input", () => {

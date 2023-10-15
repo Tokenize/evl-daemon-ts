@@ -95,6 +95,13 @@ export function parsePartition(value: string): number {
   return parseInt(value.charAt(0));
 }
 
+export function parseZone(value: string): string {
+  if (value.length < 3) {
+    return "";
+  }
+  return value.substring(0, 3);
+}
+
 export function parseChecksum(input: string): Checksum {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return "";
