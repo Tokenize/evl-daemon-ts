@@ -4,6 +4,35 @@ export const COMMAND_LENGTH = 3;
 
 export const CHECKSUM_LENGTH = 2;
 
+export const PARTITION_COMMANDS: Command[] = [
+  "650",
+  "651",
+  "652",
+  "653",
+  "654",
+  "655",
+  "656",
+  "657",
+  "658",
+  "659",
+  "660",
+  "663",
+  "664",
+  "670",
+  "671",
+  "672",
+  "673",
+  "674",
+  "700",
+  "701",
+  "702",
+  "750",
+  "751",
+  "840",
+  "841",
+  "912",
+];
+
 export function validate(input: string): boolean {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return false;
@@ -57,6 +86,13 @@ export function parseData(input: string): Data {
   value = input.substring(COMMAND_LENGTH, input.length - CHECKSUM_LENGTH);
 
   return { value, zone, partition };
+}
+
+export function parsePartition(value: string): number {
+  if (value.length <= 0) {
+    return 0;
+  }
+  return parseInt(value.charAt(0));
 }
 
 export function parseChecksum(input: string): Checksum {

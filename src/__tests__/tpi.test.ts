@@ -4,6 +4,7 @@ import {
   parseChecksum,
   parseCommand,
   parseData,
+  parsePartition,
   validate,
 } from "../tpi";
 
@@ -50,6 +51,21 @@ test("parseData should return empty data with invalid input", () => {
   const actual = parseData(input);
 
   expect(actual).toEqual(expected);
+});
+
+test("parsePartition should return the partition with valid input", () => {
+  const value = "3889";
+  const expected = 3;
+
+  const actual = parsePartition(value);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parsePartition should return 0 with invalid input", () => {
+  const actual = parsePartition("");
+
+  expect(actual).toEqual(0);
 });
 
 test("getPayload should return a payload from the given input", () => {
