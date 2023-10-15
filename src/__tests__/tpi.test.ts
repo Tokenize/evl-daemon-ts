@@ -1,5 +1,6 @@
 import {
   calculateChecksum,
+  getPayload,
   parseChecksum,
   parseCommand,
   parseData,
@@ -47,6 +48,19 @@ test("parseData should return empty data with invalid input", () => {
   const expected = { value: "", zone: "", partition: 0 };
 
   const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("getPayload should return a payload from the given input", () => {
+  const input = "500abc53";
+  const expected = {
+    command: "500",
+    data: { value: "abc", partition: 0, zone: "" },
+    checksum: "53",
+  };
+
+  const actual = getPayload(input);
 
   expect(actual).toEqual(expected);
 });

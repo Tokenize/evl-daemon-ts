@@ -29,6 +29,14 @@ export function calculateChecksum(value: string): string {
   return sum.toString(16).padStart(2, "0").toUpperCase();
 }
 
+export function getPayload(input: string): Payload {
+  const command = parseCommand(input);
+  const checksum = parseChecksum(input);
+  const data = parseData(input);
+
+  return { command, data, checksum };
+}
+
 export function parseCommand(input: string): Command {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return "";
