@@ -46,8 +46,62 @@ test("parseChecksum should return an empty checksum on invalid input", () => {
 });
 
 test("parseData should return empty data with invalid input", () => {
-  const input = "5A";
+  const input = "500AB";
   const expected = { value: "", zone: "", partition: 0 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set the correct zone for a zone command", () => {
+  const input = "605053AB";
+  const expected = { value: "", zone: "053", partition: 0 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set an empty zone for a non-zone command", () => {
+  const input = "6200000AB";
+  const expected = { value: "0000", zone: "", partition: 0 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set the correct partition for a partition command", () => {
+  const input = "6507AB";
+  const expected = { value: "", zone: "", partition: 7 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set partition to 0 with non-partition command", () => {
+  const input = "616ABCDEF12AB";
+  const expected = { value: "ABCDEF12", zone: "", partition: 0 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set partition and zone for a partition and zone command", () => {
+  const input = "6011064AB";
+  const expected = { value: "", zone: "064", partition: 1 };
+
+  const actual = parseData(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test("parseData should set correct value for a non-zone or partition command", () => {
+  const input = "500501AB";
+  const expected = { value: "501", zone: "", partition: 0 };
 
   const actual = parseData(input);
 
@@ -63,10 +117,19 @@ test("parsePartition should return the partition with valid input", () => {
   expect(actual).toEqual(expected);
 });
 
-test("parsePartition should return 0 with invalid input", () => {
+test("parsePartition should return 0 with empty input", () => {
   const actual = parsePartition("");
 
   expect(actual).toEqual(0);
+});
+
+test("parsePartition should return 0 with invalid partition number", () => {
+  const value = "ZB";
+  const expected = 0;
+
+  const actual = parsePartition(value);
+
+  expect(actual).toEqual(expected);
 });
 
 test("parseZone should return the zone with valid input", () => {
@@ -78,8 +141,14 @@ test("parseZone should return the zone with valid input", () => {
   expect(actual).toEqual(expected);
 });
 
-test("parseZone should return an empty string with invalid input", () => {
-  const value = "10";
+test("parseZone should return an empty string with empty string as input", () => {
+  const value = "";
+  const actual = parseZone(value);
+  expect(actual).toEqual("");
+});
+
+test("parseZone should return an empty string with an invalid length string", () => {
+  const value = "5A";
   const actual = parseZone(value);
   expect(actual).toEqual("");
 });

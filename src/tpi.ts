@@ -33,6 +33,10 @@ export const PARTITION_COMMANDS: Command[] = [
   "912",
 ];
 
+export const ZONE_COMMANDS: Command[] = ["605", "606", "609", "610"];
+
+export const PARTITION_ZONE_COMMANDS: Command[] = ["601", "602", "603", "604"];
+
 export function validate(input: string): boolean {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return false;
@@ -75,6 +79,7 @@ export function parseCommand(input: string): Command {
 }
 
 export function parseData(input: string): Data {
+  let command = "";
   let value = "";
   let zone = "";
   let partition = 0;
@@ -83,7 +88,21 @@ export function parseData(input: string): Data {
     return { value, zone, partition };
   }
 
+  command = parseCommand(input);
+
   value = input.substring(COMMAND_LENGTH, input.length - CHECKSUM_LENGTH);
+
+  if (PARTITION_COMMANDS.includes(command)) {
+    partition = parsePartition(value);
+    value = value.substring(1);
+  } else if (ZONE_COMMANDS.includes(command)) {
+    zone = parseZone(value);
+    value = value.substring(3);
+  } else if (PARTITION_ZONE_COMMANDS.includes(command)) {
+    partition = parsePartition(value);
+    zone = parseZone(value.substring(1, 4));
+    value = value.substring(4);
+  }
 
   return { value, zone, partition };
 }
@@ -92,7 +111,10 @@ export function parsePartition(value: string): number {
   if (value.length <= 0) {
     return 0;
   }
-  return parseInt(value.charAt(0));
+
+  const parsed = parseInt(value.charAt(0));
+
+  return isNaN(parsed) ? 0 : parsed;
 }
 
 export function parseZone(value: string): string {

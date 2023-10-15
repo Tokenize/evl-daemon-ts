@@ -15,7 +15,7 @@
     "cli": "tsc && node ./dist/cli.js",
     "watch": "tsc --watch",
     "build": "tsc",
-    "test": "jest"
+    "test": "tsc && jest"
   },
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
