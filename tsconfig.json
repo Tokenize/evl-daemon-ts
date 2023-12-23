@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node-lts/tsconfig.json",
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["./*.ts", "src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "sourceMap": true,
