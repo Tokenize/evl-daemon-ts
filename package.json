@@ -12,7 +12,7 @@
     "email": "mike@noneleft.ca"
   },
   "scripts": {
-    "cli": "tsc && node ./dist/cli.js",
+    "cli": "tsc && node ./dist/src/app/cli.js",
     "watch": "tsc --watch",
     "build": "tsc",
     "test": "tsc && jest"
