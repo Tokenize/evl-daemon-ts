@@ -7,7 +7,7 @@ import {
   parsePartition,
   parseZone,
   validate,
-} from "../tpi";
+} from "../app/tpi";
 
 test("parseCommand should return the parsed command", () => {
   const input = "500AB";
