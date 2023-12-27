@@ -12,10 +12,12 @@
     "email": "mike@noneleft.ca"
   },
   "scripts": {
-    "cli": "tsc && node ./dist/src/app/cli.js",
+    "cli": "node ./dist/src/app/cli.js",
+    "precli": "yarn run build",
     "watch": "tsc --watch",
-    "build": "tsc",
-    "test": "tsc && jest"
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "test": "jest"
   },
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
