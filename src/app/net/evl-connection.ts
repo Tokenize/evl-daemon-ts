@@ -21,6 +21,7 @@ export class EvlSocketConnection
 {
   private _ip: string;
   private _port: number;
+  private _password: string;
   private _connected: boolean = false;
 
   private _socket: Socket | null;
@@ -29,11 +30,12 @@ export class EvlSocketConnection
     return this._connected;
   }
 
-  constructor(ip: string, port: number) {
+  constructor(ip: string, port: number, password: string) {
     super();
 
     this._ip = ip;
     this._port = port;
+    this._password = password;
 
     this._socket = null;
   }
