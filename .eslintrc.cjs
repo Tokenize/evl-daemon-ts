@@ -13,6 +13,9 @@ module.exports = {
       parserOptions: {
         project: ['./tsconfig.json'], // Specify it only for TypeScript files
       },
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "error",
+      }
     },
   ],
   root: true,
