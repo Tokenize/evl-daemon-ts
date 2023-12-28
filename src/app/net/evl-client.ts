@@ -49,5 +49,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
 
   private handleCloseEvent(hadError: boolean): void {
     console.log(`Disconnected! (${hadError})...`);
+
+    this.emit("disconnected", hadError);
   }
 }
