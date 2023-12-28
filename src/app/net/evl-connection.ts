@@ -1,13 +1,24 @@
 import EventEmitter from "events";
 import { Socket, createConnection } from "net";
 
-export enum EvlSocketEvent {
+export enum EvlConnectionEvent {
   Connected = "CONNECTED",
   Data = "DATA",
   Disconnected = "DISCONNECTED",
 }
 
-export class EvlSocket extends EventEmitter {
+export interface IEvlConnection extends EventEmitter {
+  get connected(): boolean;
+
+  connect(): void;
+  disconnect(): void;
+  send(data: string): void;
+}
+
+export class EvlSocketConnection
+  extends EventEmitter
+  implements IEvlConnection
+{
   private _ip: string;
   private _port: number;
   private _connected: boolean = false;
@@ -27,17 +38,14 @@ export class EvlSocket extends EventEmitter {
     this._socket = null;
   }
 
-  connect() {
+  connect(): void {
     if (this._connected) {
       return;
     }
 
-    this._socket = createConnection(this._port, this._ip, () => {
-      console.log("Connected!");
-      this._connected = true;
-
-      this.emit(EvlSocketEvent.Connected);
-    })
+    this._socket = createConnection(this._port, this._ip, () =>
+      this.handleConnectedEvent(),
+    )
       .on("data", (data: Buffer) => this.handleDataEvent(data))
       .on("close", (handleError: boolean) =>
         this.handleCloseEvent(handleError),
@@ -56,12 +64,19 @@ export class EvlSocket extends EventEmitter {
     this._socket.destroySoon();
   }
 
+  private handleConnectedEvent(): void {
+    console.log("Connected!");
+    this._connected = true;
+
+    this.emit(EvlConnectionEvent.Connected);
+  }
+
   private handleDataEvent(data: Buffer): void {
-    this.emit(EvlSocketEvent.Data, data);
+    this.emit(EvlConnectionEvent.Data, data);
   }
 
   private handleCloseEvent(hadError: boolean): void {
     this._connected = false;
-    this.emit(EvlSocketEvent.Disconnected, hadError);
+    this.emit(EvlConnectionEvent.Disconnected, hadError);
   }
 }

@@ -1,47 +1,53 @@
 import EventEmitter from "events";
-import { EvlSocket, EvlSocketEvent } from "./evl-socket";
+import { IEvlConnection, EvlConnectionEvent } from "./evl-connection";
 
-export class EvlClient extends EventEmitter {
-  private _socket: EvlSocket;
+export interface IEvlClient extends EventEmitter {
+  connect(): void;
+  send(data: string): void;
+}
 
-  constructor(host: string, port: number) {
+export class EvlClient extends EventEmitter implements IEvlClient {
+  private _connection: IEvlConnection;
+
+  constructor(connection: IEvlConnection) {
     super();
-    this._socket = new EvlSocket(host, port);
+    this._connection = connection;
 
-    this.addSocketListeners();
+    this.addEventListeners();
   }
 
-  public connect() {
-    if (this._socket.connected) {
+  public connect(): void {
+    if (this._connection.connected) {
       return;
     }
 
-    this._socket.connect();
+    this._connection.connect();
   }
 
-  public send(data: string) {
-    if (!this._socket.connected) {
-      this._socket.send(data);
+  public send(data: string): void {
+    if (!this._connection.connected) {
+      this._connection.send(data);
     }
   }
 
-  private addSocketListeners() {
-    this._socket.addListener(EvlSocketEvent.Data, (data: string) =>
+  private addEventListeners(): void {
+    this._connection.addListener(EvlConnectionEvent.Data, (data: string) =>
       this.handleDataEvent(data),
     );
 
-    this._socket.addListener(EvlSocketEvent.Disconnected, (hadError: boolean) =>
-      this.handleCloseEvent(hadError),
+    this._connection.addListener(
+      EvlConnectionEvent.Disconnected,
+      (hadError: boolean) => this.handleCloseEvent(hadError),
     );
   }
 
-  private handleDataEvent(data: string) {
+  private handleDataEvent(data: string): void {
     console.log(`Received: ${data}`);
 
     this.emit("event", data);
   }
 
-  private handleCloseEvent(hadError: boolean) {
+  private handleCloseEvent(hadError: boolean): void {
     console.log(`Disconnected! (${hadError})...`);
   }
 }
