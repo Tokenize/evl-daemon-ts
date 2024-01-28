@@ -63,6 +63,10 @@ export function calculateChecksum(value: string): string {
 }
 
 export function getPayload(input: string): Payload {
+  if (!validate(input)) {
+    throw Error("Incoming data is not valid and can't be parsed");
+  }
+
   const command = parseCommand(input);
   const checksum = parseChecksum(input);
   const data = parseData(input);

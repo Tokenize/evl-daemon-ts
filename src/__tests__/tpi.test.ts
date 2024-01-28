@@ -154,16 +154,24 @@ test("parseZone should return an empty string with an invalid length string", ()
 });
 
 test("getPayload should return a payload from the given input", () => {
-  const input = "500abc53";
+  const input = "005user54";
   const expected = {
-    command: "500",
-    data: { value: "abc", partition: 0, zone: "" },
-    checksum: "53",
+    command: "005",
+    data: { value: "user", partition: 0, zone: "" },
+    checksum: "54",
   };
 
   const actual = getPayload(input);
 
   expect(actual).toEqual(expected);
+});
+
+test("getPayload should throw an error with invalid input", () => {
+  const input = "123abc";
+
+  expect(() => {
+    getPayload(input);
+  }).toThrow();
 });
 
 test("validate should return true with a valid checksum", () => {
