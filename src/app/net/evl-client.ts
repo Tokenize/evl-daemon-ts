@@ -1,5 +1,6 @@
 import EventEmitter from "events";
 import { IEvlConnection, EvlConnectionEvent } from "./evl-connection";
+import { Payload } from "../types";
 
 export interface IEvlClient extends EventEmitter {
   connect(): void;
@@ -31,7 +32,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private addEventListeners(): void {
-    this._connection.addListener(EvlConnectionEvent.Data, (data: string) =>
+    this._connection.addListener(EvlConnectionEvent.Data, (data: Payload) =>
       this.handleDataEvent(data),
     );
 
@@ -41,8 +42,8 @@ export class EvlClient extends EventEmitter implements IEvlClient {
     );
   }
 
-  private handleDataEvent(data: string): void {
-    console.log(`Received: ${data}`);
+  private handleDataEvent(data: Payload): void {
+    console.log(`Received: ${data.command}`);
 
     this.emit("event", data);
   }

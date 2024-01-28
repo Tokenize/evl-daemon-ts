@@ -81,8 +81,6 @@ export class EvlSocketConnection
 
     const terminator = packets.pop();
 
-    console.debug(`Received: ${asciiData}`);
-
     if (terminator !== "") {
       console.error(`Received incomplete data: ${terminator}`);
     }
