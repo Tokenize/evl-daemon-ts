@@ -27,8 +27,10 @@ export class EvlClient extends EventEmitter implements IEvlClient {
 
   public send(data: string): void {
     if (!this._connection.connected) {
-      this._connection.send(data);
+      throw Error("Unable to send, connection isn't active");
     }
+
+    this._connection.send(data);
   }
 
   private addEventListeners(): void {

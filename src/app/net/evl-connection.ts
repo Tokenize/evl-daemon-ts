@@ -41,7 +41,7 @@ export class EvlSocketConnection
     this._socket = null;
   }
 
-  connect(): void {
+  public connect(): void {
     if (this._connected) {
       return;
     }
@@ -55,11 +55,17 @@ export class EvlSocketConnection
       );
   }
 
-  send(data: string): void {
+  public send(data: string): void {
     console.debug(`Sending: ${data}`);
+
+    if (!this._connected) {
+      throw Error("Unable to send, not connected to device");
+    }
+
+    this._socket?.write(data, "latin1");
   }
 
-  disconnect(): void {
+  public disconnect(): void {
     if (this._connected || !this._socket) {
       return;
     }
