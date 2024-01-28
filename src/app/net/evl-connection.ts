@@ -1,5 +1,6 @@
 import EventEmitter from "events";
 import { Socket, createConnection } from "net";
+import { getPayload } from "../tpi";
 
 export enum EvlConnectionEvent {
   Connected = "CONNECTED",
@@ -74,7 +75,23 @@ export class EvlSocketConnection
   }
 
   private handleDataEvent(data: Buffer): void {
-    this.emit(EvlConnectionEvent.Data, data);
+    const asciiData = data.toString("latin1");
+
+    const packets = asciiData.split("\r\n");
+
+    const terminator = packets.pop();
+
+    console.debug(`Received: ${asciiData}`);
+
+    if (terminator !== "") {
+      console.error(`Received incomplete data: ${terminator}`);
+    }
+
+    packets.forEach((packet) => {
+      const payload = getPayload(packet);
+
+      this.emit(EvlConnectionEvent.Data, payload);
+    });
   }
 
   private handleCloseEvent(hadError: boolean): void {
