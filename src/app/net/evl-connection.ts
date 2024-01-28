@@ -22,7 +22,6 @@ export class EvlSocketConnection
 {
   private _ip: string;
   private _port: number;
-  private _password: string;
   private _connected: boolean = false;
 
   private _socket: Socket | null;
@@ -31,12 +30,11 @@ export class EvlSocketConnection
     return this._connected;
   }
 
-  constructor(ip: string, port: number, password: string) {
+  constructor(ip: string, port: number) {
     super();
 
     this._ip = ip;
     this._port = port;
-    this._password = password;
 
     this._socket = null;
   }
@@ -56,13 +54,21 @@ export class EvlSocketConnection
   }
 
   public send(data: string): void {
-    console.debug(`Sending: ${data}`);
-
-    if (!this._connected) {
+    if (!this._connected || !this._socket) {
       throw Error("Unable to send, not connected to device");
     }
 
-    this._socket?.write(data, "latin1");
+    const buffer = Buffer.from(data, "latin1");
+
+    const written = this._socket.write(buffer, (e?) => {
+      if (e) {
+        console.error(`Error while sending: ${e.message}`);
+      }
+    });
+
+    if (!written) {
+      throw Error("Unable to send packet to device");
+    }
   }
 
   public disconnect(): void {

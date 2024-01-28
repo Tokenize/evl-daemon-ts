@@ -9,8 +9,8 @@ const port = config.port;
 const ip = config.ip;
 const password = config.password;
 
-const evlConnection = new EvlSocketConnection(ip, port, password);
-const evlClient = new EvlClient(evlConnection);
+const evlConnection = new EvlSocketConnection(ip, port);
+const evlClient = new EvlClient(evlConnection, password);
 
 evlClient.addListener("event", (event: Payload) => {
   console.log(`Event: ${event.command}`);
