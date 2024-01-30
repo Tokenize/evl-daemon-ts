@@ -87,14 +87,12 @@ export class EvlSocketConnection
   }
 
   private handleDataEvent(data: Buffer): void {
-    const asciiData = data.toString("latin1");
+    const packets = data.toString("latin1").split("\r\n");
 
-    const packets = asciiData.split("\r\n");
+    const lastPacket = packets.pop();
 
-    const terminator = packets.pop();
-
-    if (terminator !== "") {
-      console.error(`Received incomplete data: ${terminator}`);
+    if (lastPacket !== "") {
+      console.error(`Received incomplete data: ${lastPacket}`);
     }
 
     packets.forEach((packet) => {
