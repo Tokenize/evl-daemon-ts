@@ -1,5 +1,6 @@
 import EventEmitter from "events";
 import { Socket, createConnection } from "net";
+import { getPayload } from "../tpi";
 
 export enum EvlConnectionEvent {
   Connected = "CONNECTED",
@@ -21,7 +22,6 @@ export class EvlSocketConnection
 {
   private _ip: string;
   private _port: number;
-  private _password: string;
   private _connected: boolean = false;
 
   private _socket: Socket | null;
@@ -30,17 +30,16 @@ export class EvlSocketConnection
     return this._connected;
   }
 
-  constructor(ip: string, port: number, password: string) {
+  constructor(ip: string, port: number) {
     super();
 
     this._ip = ip;
     this._port = port;
-    this._password = password;
 
     this._socket = null;
   }
 
-  connect(): void {
+  public connect(): void {
     if (this._connected) {
       return;
     }
@@ -54,11 +53,25 @@ export class EvlSocketConnection
       );
   }
 
-  send(data: string): void {
-    console.debug(`Sending: ${data}`);
+  public send(data: string): void {
+    if (!this._connected || !this._socket) {
+      throw Error("Unable to send, not connected to device");
+    }
+
+    const buffer = Buffer.from(data, "latin1");
+
+    const written = this._socket.write(buffer, (e?) => {
+      if (e) {
+        console.error(`Error while sending: ${e.message}`);
+      }
+    });
+
+    if (!written) {
+      throw Error("Unable to send packet to device");
+    }
   }
 
-  disconnect(): void {
+  public disconnect(): void {
     if (this._connected || !this._socket) {
       return;
     }
@@ -74,7 +87,19 @@ export class EvlSocketConnection
   }
 
   private handleDataEvent(data: Buffer): void {
-    this.emit(EvlConnectionEvent.Data, data);
+    const packets = data.toString("latin1").split("\r\n");
+
+    const lastPacket = packets.pop();
+
+    if (lastPacket !== "") {
+      console.error(`Received incomplete data: ${lastPacket}`);
+    }
+
+    packets.forEach((packet) => {
+      const payload = getPayload(packet);
+
+      this.emit(EvlConnectionEvent.Data, payload);
+    });
   }
 
   private handleCloseEvent(hadError: boolean): void {

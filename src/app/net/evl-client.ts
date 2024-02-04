@@ -1,5 +1,14 @@
 import EventEmitter from "events";
 import { IEvlConnection, EvlConnectionEvent } from "./evl-connection";
+import { Payload } from "../types";
+import {
+  LOGIN_REQUEST_COMMAND,
+  LOGIN_REQUEST_FAIL,
+  LOGIN_REQUEST_PASSWORD,
+  LOGIN_REQUEST_SUCCESS,
+  LOGIN_REQUEST_TIMEOUT,
+  makeLoginPacket,
+} from "../tpi";
 
 export interface IEvlClient extends EventEmitter {
   connect(): void;
@@ -8,10 +17,13 @@ export interface IEvlClient extends EventEmitter {
 
 export class EvlClient extends EventEmitter implements IEvlClient {
   private _connection: IEvlConnection;
+  private readonly _password: string;
 
-  constructor(connection: IEvlConnection) {
+  constructor(connection: IEvlConnection, password: string) {
     super();
+
     this._connection = connection;
+    this._password = password;
 
     this.addEventListeners();
   }
@@ -26,12 +38,14 @@ export class EvlClient extends EventEmitter implements IEvlClient {
 
   public send(data: string): void {
     if (!this._connection.connected) {
-      this._connection.send(data);
+      throw Error("Unable to send, connection isn't active");
     }
+
+    this._connection.send(data);
   }
 
   private addEventListeners(): void {
-    this._connection.addListener(EvlConnectionEvent.Data, (data: string) =>
+    this._connection.addListener(EvlConnectionEvent.Data, (data: Payload) =>
       this.handleDataEvent(data),
     );
 
@@ -41,8 +55,12 @@ export class EvlClient extends EventEmitter implements IEvlClient {
     );
   }
 
-  private handleDataEvent(data: string): void {
-    console.log(`Received: ${data}`);
+  private handleDataEvent(data: Payload): void {
+    console.log(`Received: ${data.command}`);
+
+    if (data.command === LOGIN_REQUEST_COMMAND) {
+      this.handleLoginEvent(data);
+    }
 
     this.emit("event", data);
   }
@@ -51,5 +69,32 @@ export class EvlClient extends EventEmitter implements IEvlClient {
     console.log(`Disconnected! (${hadError})...`);
 
     this.emit("disconnected", hadError);
+  }
+
+  private handleLoginEvent(login: Payload): void {
+    switch (login.data.value) {
+      case LOGIN_REQUEST_PASSWORD:
+        console.debug("Password requested, sending");
+        this.sendLoginCredentials();
+        break;
+      case LOGIN_REQUEST_TIMEOUT:
+        // handle timeout
+        console.error("Device sent a timeout while waiting for password");
+        break;
+      case LOGIN_REQUEST_FAIL:
+        // handle login fail
+        console.log("Invalid password, unable to connect");
+        break;
+      case LOGIN_REQUEST_SUCCESS:
+        // handle login success
+        console.log("Password valid, logged in to device");
+        break;
+    }
+  }
+
+  private sendLoginCredentials(): void {
+    const packet = makeLoginPacket(this._password);
+
+    this.send(packet);
   }
 }

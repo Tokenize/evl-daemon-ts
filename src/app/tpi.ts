@@ -37,6 +37,20 @@ export const ZONE_COMMANDS: Command[] = ["605", "606", "609", "610"];
 
 export const PARTITION_ZONE_COMMANDS: Command[] = ["601", "602", "603", "604"];
 
+export const LOGIN_REQUEST_COMMAND: Command = "505";
+
+export const LOGIN_RESPONSE_COMMAND: Command = "005";
+
+export const LOGIN_REQUEST_PASSWORD: string = "3";
+
+export const LOGIN_REQUEST_TIMEOUT: string = "2";
+
+export const LOGIN_REQUEST_SUCCESS: string = "1";
+
+export const LOGIN_REQUEST_FAIL: string = "0";
+
+export const PACKET_TERMINATOR: string = "\r\n";
+
 export function validate(input: string): boolean {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return false;
@@ -48,6 +62,14 @@ export function validate(input: string): boolean {
   const calculated = calculateChecksum(value);
 
   return checksum == calculated;
+}
+
+export function makeLoginPacket(password: string): string {
+  const value = `${LOGIN_RESPONSE_COMMAND}${password}`;
+
+  const checksum = calculateChecksum(value);
+
+  return `${value}${checksum}${PACKET_TERMINATOR}`;
 }
 
 export function calculateChecksum(value: string): string {
@@ -63,6 +85,10 @@ export function calculateChecksum(value: string): string {
 }
 
 export function getPayload(input: string): Payload {
+  if (!validate(input)) {
+    throw Error("Incoming data is not valid and can't be parsed");
+  }
+
   const command = parseCommand(input);
   const checksum = parseChecksum(input);
   const data = parseData(input);

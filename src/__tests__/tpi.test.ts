@@ -1,6 +1,9 @@
 import {
   calculateChecksum,
   getPayload,
+  LOGIN_RESPONSE_COMMAND,
+  makeLoginPacket,
+  PACKET_TERMINATOR,
   parseChecksum,
   parseCommand,
   parseData,
@@ -154,16 +157,24 @@ test("parseZone should return an empty string with an invalid length string", ()
 });
 
 test("getPayload should return a payload from the given input", () => {
-  const input = "500abc53";
+  const input = "005user54";
   const expected = {
-    command: "500",
-    data: { value: "abc", partition: 0, zone: "" },
-    checksum: "53",
+    command: "005",
+    data: { value: "user", partition: 0, zone: "" },
+    checksum: "54",
   };
 
   const actual = getPayload(input);
 
   expect(actual).toEqual(expected);
+});
+
+test("getPayload should throw an error with invalid input", () => {
+  const input = "123abc";
+
+  expect(() => {
+    getPayload(input);
+  }).toThrow();
 });
 
 test("validate should return true with a valid checksum", () => {
@@ -207,6 +218,18 @@ test("calculateChecksum should truncate to 8 bits", () => {
   const expected = "CA";
 
   const actual = calculateChecksum(value);
+
+  expect(actual).toEqual(expected);
+});
+
+test("makeLoginPacket should return a valid login packet", () => {
+  const password = "uncr@ck@bl3!";
+
+  const command = `${LOGIN_RESPONSE_COMMAND}${password}`;
+  const checksum = calculateChecksum(command);
+  const expected = `${command}${checksum}${PACKET_TERMINATOR}`;
+
+  const actual = makeLoginPacket(password);
 
   expect(actual).toEqual(expected);
 });
