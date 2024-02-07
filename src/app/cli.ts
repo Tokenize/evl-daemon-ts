@@ -1,4 +1,4 @@
-import { EvlClient } from "./net/evl-client";
+import { EvlClient, EvlEventNames } from "./net/evl-client";
 import { EvlSocketConnection } from "./net/evl-connection";
 import config from "./config/config";
 import { Payload } from "./types";
@@ -12,7 +12,7 @@ const password = config.password;
 const evlConnection = new EvlSocketConnection(ip, port);
 const evlClient = new EvlClient(evlConnection, password);
 
-evlClient.addListener("event", (event: Payload) => {
-  console.log(`Event: ${event.command}`);
+evlClient.addListener(EvlEventNames.DisconnectedEvent, (payload: Payload) => {
+  console.log(`Event: ${payload.command}`);
 });
 evlClient.connect();

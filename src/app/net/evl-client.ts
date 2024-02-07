@@ -15,6 +15,22 @@ export interface IEvlClient extends EventEmitter {
   send(data: string): void;
 }
 
+export enum EvlEventNames {
+  CommandEvent = "COMMAND_EVENT",
+  DisconnectedEvent = "DISCONNECT_EVENT",
+}
+
+export type CommandEvent = EvlEventNames.CommandEvent;
+export type DisconnectEvent = EvlEventNames.DisconnectedEvent;
+
+export type CommandEventHandler = (payload: Payload) => void;
+export type DisconnectEventHandler = (hadError: boolean) => void;
+
+export type EvlEvent = CommandEvent | DisconnectEvent;
+
+export type EvlClientEventHandler<T extends CommandEvent | DisconnectEvent> =
+  T extends CommandEvent ? CommandEventHandler : DisconnectEventHandler;
+
 export class EvlClient extends EventEmitter implements IEvlClient {
   private _connection: IEvlConnection;
   private readonly _password: string;
@@ -55,6 +71,14 @@ export class EvlClient extends EventEmitter implements IEvlClient {
     );
   }
 
+  public addListener(
+    event: EvlEvent,
+    handler: EvlClientEventHandler<EvlEvent>,
+  ): this {
+    super.addListener(event, handler);
+    return this;
+  }
+
   private handleDataEvent(data: Payload): void {
     console.log(`Received: ${data.command}`);
 
@@ -62,13 +86,13 @@ export class EvlClient extends EventEmitter implements IEvlClient {
       this.handleLoginEvent(data);
     }
 
-    this.emit("event", data);
+    this.emit(EvlEventNames.CommandEvent, data);
   }
 
   private handleCloseEvent(hadError: boolean): void {
     console.log(`Disconnected! (${hadError})...`);
 
-    this.emit("disconnected", hadError);
+    this.emit(EvlEventNames.DisconnectedEvent, hadError);
   }
 
   private handleLoginEvent(login: Payload): void {
