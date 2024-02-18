@@ -28,8 +28,9 @@ export type DisconnectEventHandler = (hadError: boolean) => void;
 
 export type EvlEvent = CommandEvent | DisconnectEvent;
 
-export type EvlClientEventHandler<T extends CommandEvent | DisconnectEvent> =
-  T extends CommandEvent ? CommandEventHandler : DisconnectEventHandler;
+export type EvlClientEventHandler<T extends EvlEvent> = T extends CommandEvent
+  ? CommandEventHandler
+  : DisconnectEventHandler;
 
 export class EvlClient extends EventEmitter implements IEvlClient {
   private _connection: IEvlConnection;
