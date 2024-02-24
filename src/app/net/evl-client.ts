@@ -9,6 +9,7 @@ import {
   LOGIN_REQUEST_TIMEOUT,
   makeLoginPacket,
 } from "../tpi";
+import { Logger } from "../logging/logger";
 
 export interface IEvlClient extends EventEmitter {
   connect(): void;
@@ -35,12 +36,14 @@ export type EvlClientEventHandler<T extends EvlEvent> = T extends CommandEvent
 export class EvlClient extends EventEmitter implements IEvlClient {
   private _connection: IEvlConnection;
   private readonly _password: string;
+  private readonly _logger: Logger;
 
-  constructor(connection: IEvlConnection, password: string) {
+  constructor(connection: IEvlConnection, password: string, logger: Logger) {
     super();
 
     this._connection = connection;
     this._password = password;
+    this._logger = logger;
 
     this.addEventListeners();
   }
@@ -81,7 +84,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleDataEvent(data: Payload): void {
-    console.log(`Received: ${data.command}`);
+    this._logger.logDebug("Received: %s", data.command);
 
     if (data.command === LOGIN_REQUEST_COMMAND) {
       this.handleLoginEvent(data);
@@ -91,7 +94,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleCloseEvent(hadError: boolean): void {
-    console.log(`Disconnected! (${hadError})...`);
+    this._logger.logInfo("Disconnected! (%s)...", hadError?.toString());
 
     this.emit(EvlEventNames.DisconnectedEvent, hadError);
   }
@@ -99,20 +102,22 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   private handleLoginEvent(login: Payload): void {
     switch (login.data.value) {
       case LOGIN_REQUEST_PASSWORD:
-        console.debug("Password requested, sending");
+        this._logger.logDebug("Password requested, sending");
         this.sendLoginCredentials();
         break;
       case LOGIN_REQUEST_TIMEOUT:
         // handle timeout
-        console.error("Device sent a timeout while waiting for password");
+        this._logger.logError(
+          "Device sent a timeout while waiting for password",
+        );
         break;
       case LOGIN_REQUEST_FAIL:
         // handle login fail
-        console.log("Invalid password, unable to connect");
+        this._logger.logError("Invalid password, unable to connect");
         break;
       case LOGIN_REQUEST_SUCCESS:
         // handle login success
-        console.log("Password valid, logged in to device");
+        this._logger.logDebug("Password valid, logged in to device");
         break;
     }
   }

@@ -9,16 +9,19 @@ import {
   LOGIN_REQUEST_PASSWORD,
   makeLoginPacket,
 } from "../../app/tpi";
+import { LogPriority, NullLogger } from "../../app/logging/logger";
 
 let evlConnection: EvlSocketConnection;
 let evlClient: EvlClient;
 let connectMock: jest.SpyInstance;
 let sendMock: jest.SpyInstance;
 
-beforeAll(() => {
-  evlConnection = new EvlSocketConnection("localhost", 4025);
+const logger = new NullLogger(LogPriority.Error);
 
-  evlClient = new EvlClient(evlConnection, "password");
+beforeAll(() => {
+  evlConnection = new EvlSocketConnection("localhost", 4025, logger);
+
+  evlClient = new EvlClient(evlConnection, "password", logger);
 
   connectMock = jest
     .spyOn(EvlSocketConnection.prototype, "connect")
