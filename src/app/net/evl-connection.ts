@@ -1,6 +1,7 @@
 import EventEmitter from "events";
 import { Socket, createConnection } from "net";
 import { getPayload } from "../tpi";
+import { Logger } from "../logging/logger";
 
 export enum EvlConnectionEvent {
   Connected = "CONNECTED",
@@ -24,18 +25,20 @@ export class EvlSocketConnection
   private _port: number;
   private _connected: boolean = false;
 
+  private _logger: Logger;
   private _socket: Socket | null;
 
   get connected(): boolean {
     return this._connected;
   }
 
-  constructor(ip: string, port: number) {
+  constructor(ip: string, port: number, logger: Logger) {
     super();
 
     this._ip = ip;
     this._port = port;
 
+    this._logger = logger;
     this._socket = null;
   }
 
@@ -62,7 +65,7 @@ export class EvlSocketConnection
 
     const written = this._socket.write(buffer, (e?) => {
       if (e) {
-        console.error(`Error while sending: ${e.message}`);
+        this._logger.logError("Error while sending: %s", e.message);
       }
     });
 
@@ -80,7 +83,7 @@ export class EvlSocketConnection
   }
 
   private handleConnectedEvent(): void {
-    console.log("Connected!");
+    this._logger.logDebug("Connected!");
     this._connected = true;
 
     this.emit(EvlConnectionEvent.Connected);
@@ -92,7 +95,7 @@ export class EvlSocketConnection
     const lastPacket = packets.pop();
 
     if (lastPacket !== "") {
-      console.error(`Received incomplete data: ${lastPacket}`);
+      this._logger.logError("Received incomplete data: %s", lastPacket);
     }
 
     packets.forEach((packet) => {

@@ -1,32 +1,24 @@
-import {
-  EvlConnectionEvent,
-  EvlSocketConnection,
-} from "../../app/net/evl-connection";
+import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { Payload } from "../../app/types";
-import {
-  LOGIN_REQUEST_COMMAND,
-  LOGIN_REQUEST_PASSWORD,
-  makeLoginPacket,
-} from "../../app/tpi";
+import { LOGIN_REQUEST_COMMAND, LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
+import { LogPriority, NullLogger } from "../../app/logging/logger";
 
 let evlConnection: EvlSocketConnection;
 let evlClient: EvlClient;
 let connectMock: jest.SpyInstance;
 let sendMock: jest.SpyInstance;
 
+const logger = new NullLogger(LogPriority.Error);
+
 beforeAll(() => {
-  evlConnection = new EvlSocketConnection("localhost", 4025);
+  evlConnection = new EvlSocketConnection("localhost", 4025, logger);
 
-  evlClient = new EvlClient(evlConnection, "password");
+  evlClient = new EvlClient(evlConnection, "password", logger);
 
-  connectMock = jest
-    .spyOn(EvlSocketConnection.prototype, "connect")
-    .mockImplementation(() => {});
+  connectMock = jest.spyOn(EvlSocketConnection.prototype, "connect").mockImplementation(() => {});
 
-  sendMock = jest
-    .spyOn(EvlSocketConnection.prototype, "send")
-    .mockImplementation(() => {});
+  sendMock = jest.spyOn(EvlSocketConnection.prototype, "send").mockImplementation(() => {});
 });
 
 beforeEach(() => {
@@ -73,9 +65,7 @@ describe("send", () => {
   });
 
   test("should send given data if connected", () => {
-    jest
-      .spyOn(EvlSocketConnection.prototype, "connected", "get")
-      .mockImplementation(() => true);
+    jest.spyOn(EvlSocketConnection.prototype, "connected", "get").mockImplementation(() => true);
 
     evlClient.send("data");
 
@@ -91,9 +81,7 @@ test("should send login credentials when login event received", () => {
 
   const loginPacket = makeLoginPacket("password");
 
-  jest
-    .spyOn(EvlSocketConnection.prototype, "connected", "get")
-    .mockImplementation(() => true);
+  jest.spyOn(EvlSocketConnection.prototype, "connected", "get").mockImplementation(() => true);
 
   evlConnection.emit(EvlConnectionEvent.Data, loginPayload);
 
