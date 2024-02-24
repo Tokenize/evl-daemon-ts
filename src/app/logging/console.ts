@@ -6,20 +6,13 @@ export default class ConsoleLogger extends Logger {
     super(priority);
   }
 
-  log(
-    priority: LogPriority,
-    message: string,
-    ...params: LogMessageParameter[]
-  ): void {
+  log(priority: LogPriority, message: string, ...params: LogMessageParameter[]): void {
     if (priority > this.priority) {
       return;
     }
 
     const date = new Date(Date.now()).toISOString();
-    const formatted = format(
-      `[${LogPriority[priority]}][${date}]: ${message}`,
-      ...params,
-    );
+    const formatted = format(`[${LogPriority[priority]}][${date}]: ${message}`, ...params);
     if (priority === LogPriority.Error) {
       console.error(formatted);
     } else {

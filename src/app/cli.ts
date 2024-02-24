@@ -17,6 +17,6 @@ const evlConnection = new EvlSocketConnection(ip, port, logger);
 const evlClient = new EvlClient(evlConnection, password, logger);
 
 evlClient.addListener(EvlEventNames.DisconnectedEvent, (payload: Payload) => {
-  console.log(`Event: ${payload.command}`);
+  logger.logTrace(`Event: ${payload.command}`);
 });
 evlClient.connect();

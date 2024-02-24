@@ -11,11 +11,7 @@ export type LogMessageParameter = string | undefined | null;
 export abstract class Logger {
   protected constructor(protected priority: LogPriority) {}
 
-  abstract log(
-    priority: LogPriority,
-    message: string,
-    ...params: LogMessageParameter[]
-  ): void;
+  abstract log(priority: LogPriority, message: string, ...params: LogMessageParameter[]): void;
 
   logError(message: string, ...params: LogMessageParameter[]): void {
     this.log(LogPriority.Error, message, ...params);
@@ -44,12 +40,9 @@ export class NullLogger extends Logger {
   }
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  log(
-    priority: LogPriority,
-    message: string,
-    ...params: LogMessageParameter[]
-  ): void {
+  log(priority: LogPriority, message: string, ...params: LogMessageParameter[]): void {
     return;
   }
+
   /* eslint-enable */
 }
