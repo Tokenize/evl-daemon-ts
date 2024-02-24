@@ -1,7 +1,7 @@
 import {
   calculateChecksum,
+  COMMANDS,
   getPayload,
-  LOGIN_RESPONSE_COMMAND,
   makeLoginPacket,
   PACKET_TERMINATOR,
   parseChecksum,
@@ -225,7 +225,7 @@ test("calculateChecksum should truncate to 8 bits", () => {
 test("makeLoginPacket should return a valid login packet", () => {
   const password = "uncr@ck@bl3!";
 
-  const command = `${LOGIN_RESPONSE_COMMAND}${password}`;
+  const command = `${COMMANDS.NETWORK_LOGIN}${password}`;
   const checksum = calculateChecksum(command);
   const expected = `${command}${checksum}${PACKET_TERMINATOR}`;
 

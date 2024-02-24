@@ -1,7 +1,7 @@
 import { LogPriority, NullLogger } from "../../app/logging/logger";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
-import { LOGIN_REQUEST_COMMAND, LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
+import { COMMANDS, LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
 import { Payload } from "../../app/types";
 
 let evlConnection: EvlSocketConnection;
@@ -75,7 +75,7 @@ describe("send", () => {
 
 test("should send login credentials when login event received", () => {
   const loginPayload = {
-    command: LOGIN_REQUEST_COMMAND,
+    command: COMMANDS.LOGIN,
     data: { value: LOGIN_REQUEST_PASSWORD },
   } as Payload;
 
