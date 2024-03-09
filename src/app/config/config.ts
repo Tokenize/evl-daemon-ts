@@ -1,4 +1,4 @@
-import convict from "convict";
+import convict = require("convict");
 import { EvlConfig, Schema } from "./schema";
 
 const config = convict<EvlConfig>(Schema);
