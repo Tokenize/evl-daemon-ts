@@ -1,7 +1,7 @@
-import EventEmitter from "events";
+import { EventEmitter } from "events";
 import { Socket, createConnection } from "net";
-import { getPayload } from "../tpi";
 import { Logger } from "../logging/logger";
+import { getPayload } from "../tpi";
 
 export enum EvlConnectionEvent {
   Connected = "CONNECTED",

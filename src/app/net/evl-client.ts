@@ -1,6 +1,5 @@
-import EventEmitter from "events";
-import { IEvlConnection, EvlConnectionEvent } from "./evl-connection";
-import { Payload } from "../types";
+import { EventEmitter } from "events";
+import { Logger } from "../logging/logger";
 import {
   LOGIN_REQUEST_COMMAND,
   LOGIN_REQUEST_FAIL,
@@ -9,7 +8,8 @@ import {
   LOGIN_REQUEST_TIMEOUT,
   makeLoginPacket,
 } from "../tpi";
-import { Logger } from "../logging/logger";
+import { Payload } from "../types";
+import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
 
 export interface IEvlClient extends EventEmitter {
   connect(): void;
