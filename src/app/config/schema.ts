@@ -3,6 +3,7 @@ export interface EvlConfig {
   ip: string;
   port: number;
   password: string;
+  zones: { [zone: string]: string };
 }
 
 type EvlConfigSchema = convict.Schema<EvlConfig>;
@@ -23,5 +24,10 @@ export const Schema: EvlConfigSchema = {
     default: "",
     arg: "password",
     sensitive: true,
+  },
+  zones: {
+    format: Object,
+    default: {},
+    arg: "zones",
   },
 };

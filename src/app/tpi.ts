@@ -1,3 +1,4 @@
+import config from "./config/config";
 import { Checksum, Command, Data, Payload } from "./types";
 
 export const COMMAND_LENGTH = 3;
@@ -132,6 +133,20 @@ export const LOGIN_REQUEST_SUCCESS: string = "1";
 export const LOGIN_REQUEST_FAIL: string = "0";
 
 export const PACKET_TERMINATOR: string = "\r\n";
+
+export function friendly(payload: Payload): string {
+  const command = payload.command;
+  let friendly: string;
+
+  if (ZONE_COMMANDS.includes(payload.command)) {
+    const zone = config.zones[payload.data.zone] ?? payload.data.zone;
+    friendly = `${command}, Zone: ${zone}`;
+  } else {
+    friendly = `${command}`;
+  }
+
+  return friendly;
+}
 
 export function validate(input: string): boolean {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {

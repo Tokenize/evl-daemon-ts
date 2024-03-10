@@ -6,6 +6,7 @@ import {
   LOGIN_REQUEST_PASSWORD,
   LOGIN_REQUEST_SUCCESS,
   LOGIN_REQUEST_TIMEOUT,
+  friendly,
   makeLoginPacket,
 } from "../tpi";
 import { Command, Payload } from "../types";
@@ -80,7 +81,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleDataEvent(payload: Payload): void {
-    this._logger.logDebug("Received: %s", payload.command);
+    this._logger.logDebug("Received: %s", friendly(payload));
 
     if (payload.command === (COMMANDS.LOGIN as Command)) {
       this.handleLoginEvent(payload);
