@@ -2,9 +2,7 @@ import ConsoleLogger from "../../app/logging/console";
 import { LogPriority } from "../../app/logging/logger";
 import resetAllMocks = jest.resetAllMocks;
 
-const errorMock = jest
-  .spyOn(global.console, "error")
-  .mockImplementation(() => {});
+const errorMock = jest.spyOn(global.console, "error").mockImplementation(() => {});
 const logMock = jest.spyOn(global.console, "log").mockImplementation(() => {});
 const logger = new ConsoleLogger(LogPriority.Debug);
 

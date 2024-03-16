@@ -69,16 +69,12 @@ export class EvlClient extends EventEmitter implements IEvlClient {
       this.handleDataEvent(data),
     );
 
-    this._connection.addListener(
-      EvlConnectionEvent.Disconnected,
-      (hadError: boolean) => this.handleCloseEvent(hadError),
+    this._connection.addListener(EvlConnectionEvent.Disconnected, (hadError: boolean) =>
+      this.handleCloseEvent(hadError),
     );
   }
 
-  public addListener(
-    event: EvlEvent,
-    handler: EvlClientEventHandler<EvlEvent>,
-  ): this {
+  public addListener(event: EvlEvent, handler: EvlClientEventHandler<EvlEvent>): this {
     super.addListener(event, handler);
     return this;
   }
@@ -107,9 +103,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
         break;
       case LOGIN_REQUEST_TIMEOUT:
         // handle timeout
-        this._logger.logError(
-          "Device sent a timeout while waiting for password",
-        );
+        this._logger.logError("Device sent a timeout while waiting for password");
         break;
       case LOGIN_REQUEST_FAIL:
         // handle login fail
