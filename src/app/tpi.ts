@@ -140,7 +140,17 @@ export function friendly(payload: Payload): string {
 
   if (ZONE_COMMANDS.includes(payload.command)) {
     const zone = config.zones[payload.data.zone] ?? payload.data.zone;
+
     friendly = `${command}, Zone: ${zone}`;
+  } else if (PARTITION_ZONE_COMMANDS.includes(payload.command)) {
+    const zone = config.zones[payload.data.zone] ?? payload.data.zone;
+    const partition = config.partitions[payload.data.partition] ?? payload.data.partition;
+
+    friendly = `${command}, Partition: ${partition}, Zone: ${zone}`;
+  } else if (PARTITION_COMMANDS.includes(payload.command)) {
+    const partition = config.partitions[payload.data.partition] ?? payload.data.partition;
+
+    friendly = `${command}, Partition: ${partition}`;
   } else {
     friendly = `${command}`;
   }

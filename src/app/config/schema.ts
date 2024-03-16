@@ -4,6 +4,7 @@ export interface EvlConfig {
   port: number;
   password: string;
   zones: { [zone: string]: string };
+  partitions: { [partition: string]: string };
 }
 
 type EvlConfigSchema = convict.Schema<EvlConfig>;
@@ -29,5 +30,10 @@ export const Schema: EvlConfigSchema = {
     format: Object,
     default: {},
     arg: "zones",
+  },
+  partitions: {
+    format: Object,
+    default: {},
+    arg: "partitions",
   },
 };
