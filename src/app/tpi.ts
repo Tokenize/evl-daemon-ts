@@ -135,7 +135,7 @@ export const LOGIN_REQUEST_FAIL: string = "0";
 export const PACKET_TERMINATOR: string = "\r\n";
 
 export function friendly(payload: Payload): string {
-  const command = payload.command;
+  const command = config.commands[payload.command] ?? payload.command;
   let friendly: string;
 
   if (ZONE_COMMANDS.includes(payload.command)) {
