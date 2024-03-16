@@ -17,10 +17,7 @@ export interface IEvlConnection extends EventEmitter {
   send(data: string): void;
 }
 
-export class EvlSocketConnection
-  extends EventEmitter
-  implements IEvlConnection
-{
+export class EvlSocketConnection extends EventEmitter implements IEvlConnection {
   private _ip: string;
   private _port: number;
   private _connected: boolean = false;
@@ -47,13 +44,9 @@ export class EvlSocketConnection
       return;
     }
 
-    this._socket = createConnection(this._port, this._ip, () =>
-      this.handleConnectedEvent(),
-    )
+    this._socket = createConnection(this._port, this._ip, () => this.handleConnectedEvent())
       .on("data", (data: Buffer) => this.handleDataEvent(data))
-      .on("close", (handleError: boolean) =>
-        this.handleCloseEvent(handleError),
-      );
+      .on("close", (handleError: boolean) => this.handleCloseEvent(handleError));
   }
 
   public send(data: string): void {
