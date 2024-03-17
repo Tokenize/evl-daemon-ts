@@ -41,7 +41,7 @@ export const Schema: EvlConfigSchema = {
   },
   commands: {
     format: Object,
-    default: {},
+    default: null,
     arg: "commands",
   },
 };

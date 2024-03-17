@@ -1,15 +1,14 @@
 import EventEmitter from "events";
 import { Logger } from "../logging/logger";
 import {
-  COMMANDS,
   LOGIN_REQUEST_FAIL,
   LOGIN_REQUEST_PASSWORD,
   LOGIN_REQUEST_SUCCESS,
   LOGIN_REQUEST_TIMEOUT,
-  friendly,
   makeLoginPacket,
 } from "../tpi";
 import { Command, Payload } from "../types";
+import { friendly } from "../util";
 import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
 
 export interface IEvlClient extends EventEmitter {
@@ -83,7 +82,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   private handleDataEvent(payload: Payload): void {
     this._logger.logDebug("Received: %s", friendly(payload));
 
-    if (payload.command === (COMMANDS.LOGIN as Command)) {
+    if (payload.command === (Command.LOGIN as Command)) {
       this.handleLoginEvent(payload);
     }
 
