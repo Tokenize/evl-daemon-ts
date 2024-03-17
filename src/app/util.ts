@@ -1,22 +1,22 @@
 import config from "./config/config";
 import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi";
-import { Payload } from "./types";
+import { Command, Payload } from "./types";
 
-export function friendly(payload: Payload): string {
-  const command = config.commands[payload.command] ?? payload.command;
+export function printPayload(payload: Payload): string {
+  const command = commandName(payload.command);
   let friendly: string;
 
   if (ZONE_COMMANDS.includes(payload.command)) {
-    const zone = config.zones[payload.data.zone] ?? payload.data.zone;
+    const zone = zoneName(payload.data.zone);
 
     friendly = `${command}, Zone: ${zone}`;
   } else if (PARTITION_ZONE_COMMANDS.includes(payload.command)) {
-    const zone = config.zones[payload.data.zone] ?? payload.data.zone;
-    const partition = config.partitions[payload.data.partition] ?? payload.data.partition;
+    const zone = zoneName(payload.data.zone);
+    const partition = partitionName(payload.data.partition);
 
     friendly = `${command}, Partition: ${partition}, Zone: ${zone}`;
   } else if (PARTITION_COMMANDS.includes(payload.command)) {
-    const partition = config.partitions[payload.data.partition] ?? payload.data.partition;
+    const partition = partitionName(payload.data.partition);
 
     friendly = `${command}, Partition: ${partition}`;
   } else {
@@ -24,4 +24,16 @@ export function friendly(payload: Payload): string {
   }
 
   return friendly;
+}
+
+export function commandName(command: Command): string {
+  return config.commands[command];
+}
+
+export function zoneName(zone: string): string {
+  return config.zones[zone] ?? zone;
+}
+
+export function partitionName(partition: number): string {
+  return config.partitions[partition] ?? partition;
 }

@@ -6,7 +6,7 @@ export interface EvlConfig {
   port: number;
   password: string;
   zones: Record<string, string>;
-  partitions: Record<string, string>;
+  partitions: Record<number, string>;
   commands: Record<Command, string>;
 }
 
