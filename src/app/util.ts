@@ -27,7 +27,7 @@ export function payloadToString(payload: Payload): string {
 }
 
 export function commandName(command: Command): string {
-  return config.commands[command];
+  return config.commands[command] ?? command;
 }
 
 export function zoneName(zone: string): string {
@@ -35,5 +35,5 @@ export function zoneName(zone: string): string {
 }
 
 export function partitionName(partition: number): string {
-  return config.partitions[partition] ?? partition;
+  return config.partitions[partition] ?? partition.toString(10);
 }
