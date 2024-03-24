@@ -2,7 +2,7 @@ import config from "./config/config";
 import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi";
 import { Command, Payload } from "./types";
 
-export function printPayload(payload: Payload): string {
+export function payloadToString(payload: Payload): string {
   const command = commandName(payload.command);
   let friendly: string;
 

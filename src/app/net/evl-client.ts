@@ -8,7 +8,7 @@ import {
   makeLoginPacket,
 } from "../tpi";
 import { Command, Payload } from "../types";
-import { printPayload } from "../util";
+import { payloadToString } from "../util";
 import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
 
 export interface IEvlClient extends EventEmitter {
@@ -80,7 +80,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleDataEvent(payload: Payload): void {
-    this._logger.logDebug("Received: %s", printPayload(payload));
+    this._logger.logDebug("Received: %s", payloadToString(payload));
 
     if (payload.command === (Command.LOGIN as Command)) {
       this.handleLoginEvent(payload);
