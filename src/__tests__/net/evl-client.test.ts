@@ -1,8 +1,8 @@
 import { LogPriority, NullLogger } from "../../app/logging/logger";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
-import { LOGIN_REQUEST_COMMAND, LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
-import { Payload } from "../../app/types";
+import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
+import { Command, Payload } from "../../app/types";
 
 let evlConnection: EvlSocketConnection;
 let evlClient: EvlClient;
@@ -75,7 +75,7 @@ describe("send", () => {
 
 test("should send login credentials when login event received", () => {
   const loginPayload = {
-    command: LOGIN_REQUEST_COMMAND,
+    command: Command.LOGIN,
     data: { value: LOGIN_REQUEST_PASSWORD },
   } as Payload;
 
@@ -101,7 +101,7 @@ test("should emit disconnect event when disconnected", () => {
 test("should emit data event when data is received", () => {
   const dataEventMock = jest.fn();
   const dataPayload = {
-    command: "123",
+    command: "123" as Command,
     checksum: "123",
     data: { value: "123" },
   } as Payload;

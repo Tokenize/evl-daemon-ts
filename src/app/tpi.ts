@@ -1,45 +1,51 @@
-import { Checksum, Command, Data, Payload } from "./types";
+import { Command, Data, Payload } from "./types";
 
 export const COMMAND_LENGTH = 3;
 
 export const CHECKSUM_LENGTH = 2;
 
 export const PARTITION_COMMANDS: Command[] = [
-  "650",
-  "651",
-  "652",
-  "653",
-  "654",
-  "655",
-  "656",
-  "657",
-  "658",
-  "659",
-  "660",
-  "663",
-  "664",
-  "670",
-  "671",
-  "672",
-  "673",
-  "674",
-  "700",
-  "701",
-  "702",
-  "750",
-  "751",
-  "840",
-  "841",
-  "912",
+  Command.PARTITION_READY,
+  Command.PARTITION_NOT_READY,
+  Command.PARTITION_ARMED,
+  Command.PARTITION_READY_FORCE_ARMING_ENABLED,
+  Command.PARTITION_IN_ALARM,
+  Command.PARTITION_DISARMED,
+  Command.EXIT_DELAY_IN_PROGRESS,
+  Command.ENTRY_DELAY_IN_PROGRESS,
+  Command.KEYPAD_LOCK_OUT,
+  Command.PARTITION_FAILED_TO_ARM,
+  Command.PGM_OUTPUT_IN_PROGRESS,
+  Command.CHIME_ENABLED,
+  Command.CHIME_DISABLED,
+  Command.INVALID_ACCESS_CODE,
+  Command.FUNCTION_NOT_AVAILABLE,
+  Command.FAILURE_TO_ARM,
+  Command.PARTITION_IS_BUSY,
+  Command.SYSTEM_ARMING_IN_PROGRESS,
+  Command.USER_CLOSING,
+  Command.SPECIAL_CLOSING,
+  Command.PARTIAL_CLOSING,
+  Command.USER_OPENING,
+  Command.SPECIAL_OPENING,
+  Command.TROUBLE_LED_ON,
+  Command.TROUBLE_LED_OFF,
+  Command.COMMAND_OUTPUT_PRESSED,
 ];
 
-export const ZONE_COMMANDS: Command[] = ["605", "606", "609", "610"];
+export const ZONE_COMMANDS: Command[] = [
+  Command.ZONE_FAULT,
+  Command.ZONE_FAULT_RESTORE,
+  Command.ZONE_OPEN,
+  Command.ZONE_RESTORED,
+];
 
-export const PARTITION_ZONE_COMMANDS: Command[] = ["601", "602", "603", "604"];
-
-export const LOGIN_REQUEST_COMMAND: Command = "505";
-
-export const LOGIN_RESPONSE_COMMAND: Command = "005";
+export const PARTITION_ZONE_COMMANDS: Command[] = [
+  Command.ZONE_ALARM,
+  Command.ZONE_ALARM_RESTORE,
+  Command.ZONE_TAMPER,
+  Command.ZONE_TAMPER_RESTORE,
+];
 
 export const LOGIN_REQUEST_PASSWORD: string = "3";
 
@@ -65,7 +71,7 @@ export function validate(input: string): boolean {
 }
 
 export function makeLoginPacket(password: string): string {
-  const value = `${LOGIN_RESPONSE_COMMAND}${password}`;
+  const value = `${Command.NETWORK_LOGIN}${password}`;
 
   const checksum = calculateChecksum(value);
 
@@ -98,14 +104,13 @@ export function getPayload(input: string): Payload {
 
 export function parseCommand(input: string): Command {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
-    return "";
+    throw Error("Unable to parse command - invalid input length");
   }
 
-  return input.substring(0, COMMAND_LENGTH);
+  return input.substring(0, COMMAND_LENGTH) as Command;
 }
 
 export function parseData(input: string): Data {
-  let command = "";
   let value = "";
   let zone = "";
   let partition = 0;
@@ -114,7 +119,7 @@ export function parseData(input: string): Data {
     return { value, zone, partition };
   }
 
-  command = parseCommand(input);
+  const command = parseCommand(input) as Command;
 
   value = input.substring(COMMAND_LENGTH, input.length - CHECKSUM_LENGTH);
 
@@ -150,7 +155,7 @@ export function parseZone(value: string): string {
   return value.substring(0, 3);
 }
 
-export function parseChecksum(input: string): Checksum {
+export function parseChecksum(input: string): string {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
     return "";
   }

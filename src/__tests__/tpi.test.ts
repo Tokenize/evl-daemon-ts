@@ -1,7 +1,6 @@
 import {
   calculateChecksum,
   getPayload,
-  LOGIN_RESPONSE_COMMAND,
   makeLoginPacket,
   PACKET_TERMINATOR,
   parseChecksum,
@@ -11,6 +10,7 @@ import {
   parseZone,
   validate,
 } from "../app/tpi";
+import { Command } from "../app/types";
 
 test("parseCommand should return the parsed command", () => {
   const input = "500AB";
@@ -21,13 +21,12 @@ test("parseCommand should return the parsed command", () => {
   expect(actual).toEqual(expected);
 });
 
-test("parseCommand should return an empty command with invalid input", () => {
+test("parseCommand should throw an error with invalid input", () => {
   const input = "50";
-  const expected = "";
 
-  const actual = parseCommand(input);
-
-  expect(actual).toEqual(expected);
+  expect(() => {
+    parseCommand(input);
+  }).toThrow();
 });
 
 test("parseChecksum should return the parsed checksum", () => {
@@ -225,7 +224,7 @@ test("calculateChecksum should truncate to 8 bits", () => {
 test("makeLoginPacket should return a valid login packet", () => {
   const password = "uncr@ck@bl3!";
 
-  const command = `${LOGIN_RESPONSE_COMMAND}${password}`;
+  const command = `${Command.NETWORK_LOGIN}${password}`;
   const checksum = calculateChecksum(command);
   const expected = `${command}${checksum}${PACKET_TERMINATOR}`;
 

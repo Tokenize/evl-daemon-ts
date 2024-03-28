@@ -1,9 +1,15 @@
-import convict = require("convict");
+import convict from "convict";
+import { COMMAND_NAMES } from "./commands";
 import { EvlConfig, Schema } from "./schema";
+import { existsSync } from "fs";
 
 const config = convict<EvlConfig>(Schema);
 
-config.loadFile("./evl-daemon.json");
+config.set("commands", COMMAND_NAMES);
+
+if (existsSync("./evl-daemon.json")) {
+  config.loadFile("./evl-daemon.json");
+}
 
 config.validate();
 

@@ -1,9 +1,8 @@
-import { EvlClient, EvlEventNames } from "./net/evl-client";
-import { EvlSocketConnection } from "./net/evl-connection";
 import config from "./config/config";
-import { Payload } from "./types";
 import ConsoleLogger from "./logging/console";
 import { LogPriority } from "./logging/logger";
+import { EvlClient, EvlEventNames } from "./net/evl-client";
+import { EvlSocketConnection } from "./net/evl-connection";
 
 console.log("Welcome to EvlDaemon.");
 
@@ -16,7 +15,7 @@ const logger = new ConsoleLogger(LogPriority.Debug);
 const evlConnection = new EvlSocketConnection(ip, port, logger);
 const evlClient = new EvlClient(evlConnection, password, logger);
 
-evlClient.addListener(EvlEventNames.DisconnectedEvent, (payload: Payload) => {
-  logger.logTrace(`Event: ${payload.command}`);
+evlClient.addListener(EvlEventNames.DisconnectedEvent, () => {
+  logger.logInfo(`Disconnected from EVL device.`);
 });
 evlClient.connect();

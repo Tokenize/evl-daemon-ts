@@ -1,5 +1,18 @@
 {
   "ip": "127.0.0.1",
   "port": 4025,
-  "password": "SECRET"
+  "password": "SECRET",
+  "zones": {
+    "001": "Front Door",
+    "002": "Garage Door",
+    "003": "Back Door",
+    "004": "Kids Bedroom Window",
+    "005": "Main Bedroom Window",
+    "006": "Living Room Window",
+    "007": "Kitchen Window",
+    "008": "Motion Sensor"
+  },
+  "partitions": {
+    "1": "Main"
+  }
 }
