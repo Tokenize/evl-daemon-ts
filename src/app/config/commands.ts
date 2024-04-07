@@ -1,6 +1,6 @@
-import { Command } from "../types";
+import { Command, CommandPriority } from "../types";
 
-export const COMMAND_NAMES: Record<Command, string> = {
+export const CommandNames: Record<Command, string> = {
   "000": "Poll",
   "001": "Status Report",
   "005": "Network Login",
@@ -74,4 +74,57 @@ export const COMMAND_NAMES: Record<Command, string> = {
   "921": "Master Code Required",
   "922": "Installers Code Required",
   S01: "Software Zone Alarm",
+};
+
+export const CommandPriorities: Partial<Record<Command, CommandPriority>> = {
+  [Command.LOGIN]: CommandPriority.Medium,
+  [Command.ZONE_ALARM_RESTORE]: CommandPriority.Medium,
+  [Command.ZONE_TAMPER_RESTORE]: CommandPriority.Medium,
+  [Command.ZONE_FAULT_RESTORE]: CommandPriority.Medium,
+  [Command.ZONE_RESTORED]: CommandPriority.Medium,
+  [Command.PARTITION_ARMED]: CommandPriority.Medium,
+  [Command.PARTITION_DISARMED]: CommandPriority.Medium,
+  [Command.EXIT_DELAY_IN_PROGRESS]: CommandPriority.Medium,
+  [Command.ENTRY_DELAY_IN_PROGRESS]: CommandPriority.Medium,
+  [Command.PARTITION_IS_BUSY]: CommandPriority.Medium,
+  [Command.SYSTEM_ARMING_IN_PROGRESS]: CommandPriority.Medium,
+  [Command.USER_CLOSING]: CommandPriority.Medium,
+  [Command.SPECIAL_CLOSING]: CommandPriority.Medium,
+  [Command.PARTIAL_CLOSING]: CommandPriority.Medium,
+  [Command.USER_OPENING]: CommandPriority.Medium,
+  [Command.SPECIAL_OPENING]: CommandPriority.Medium,
+  [Command.PANEL_BATTERY_TROUBLE_RESTORE]: CommandPriority.Medium,
+  [Command.PANEL_AC_RESTORE]: CommandPriority.Medium,
+  [Command.SYSTEM_BELL_TROUBLE_RESTORE]: CommandPriority.Medium,
+  [Command.GENERAL_SYSTEM_TAMPER_RESTORE]: CommandPriority.Medium,
+  [Command.TROUBLE_LED_OFF]: CommandPriority.Medium,
+  [Command.FIRE_TROUBLE_ALARM_RESTORE]: CommandPriority.Medium,
+
+  [Command.PARTITION_IN_ALARM]: CommandPriority.High,
+  [Command.KEYPAD_LOCK_OUT]: CommandPriority.High,
+  [Command.PARTITION_FAILED_TO_ARM]: CommandPriority.High,
+  [Command.INVALID_ACCESS_CODE]: CommandPriority.High,
+  [Command.FUNCTION_NOT_AVAILABLE]: CommandPriority.High,
+  [Command.FAILURE_TO_ARM]: CommandPriority.High,
+  [Command.SYSTEM_IN_INSTALLERS_MODE]: CommandPriority.High,
+  [Command.ZONE_ALARM]: CommandPriority.High,
+  [Command.FIRE_TROUBLE_ALARM]: CommandPriority.High,
+  [Command.CODE_REQUIRED]: CommandPriority.High,
+  [Command.COMMAND_OUTPUT_PRESSED]: CommandPriority.High,
+  [Command.MASTER_CODE_REQUIRED]: CommandPriority.High,
+  [Command.INSTALLERS_CODE_REQUIRED]: CommandPriority.High,
+  [Command.SOFTWARE_ZONE_ALARM]: CommandPriority.High,
+
+  [Command.COMMAND_ERROR]: CommandPriority.Critical,
+  [Command.SYSTEM_ERROR]: CommandPriority.Critical,
+  [Command.ZONE_TAMPER]: CommandPriority.Critical,
+  [Command.ZONE_FAULT]: CommandPriority.Critical,
+  [Command.PANEL_BATTERY_TROUBLE]: CommandPriority.Critical,
+  [Command.PANEL_AC_TROUBLE]: CommandPriority.Critical,
+  [Command.SYSTEM_BELL_TROUBLE]: CommandPriority.Critical,
+  [Command.FTC_TROUBLE]: CommandPriority.Critical,
+  [Command.BUFFER_NEAR_FULL]: CommandPriority.Critical,
+  [Command.GENERAL_SYSTEM_TAMPER]: CommandPriority.Critical,
+  [Command.TROUBLE_LED_ON]: CommandPriority.Critical,
+  [Command.VERBOSE_TROUBLE_STATUS]: CommandPriority.Critical,
 };

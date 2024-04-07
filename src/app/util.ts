@@ -1,6 +1,6 @@
 import config from "./config/config";
 import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi";
-import { Command, Payload } from "./types";
+import { Command, CommandPriority, Payload } from "./types";
 
 export function payloadToString(payload: Payload): string {
   const command = commandName(payload.command);
@@ -28,6 +28,10 @@ export function payloadToString(payload: Payload): string {
 
 export function commandName(command: Command): string {
   return config.commands[command] ?? command;
+}
+
+export function commandPriority(command: Command): CommandPriority {
+  return config.priorities[command] ?? CommandPriority.Low;
 }
 
 export function zoneName(zone: string): string {

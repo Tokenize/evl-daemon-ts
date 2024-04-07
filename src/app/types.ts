@@ -74,6 +74,13 @@ export enum Command {
   SOFTWARE_ZONE_ALARM = "S01",
 }
 
+export enum CommandPriority {
+  Low,
+  Medium,
+  High,
+  Critical,
+}
+
 export type Data = {
   partition: number;
   zone: string;

@@ -1,11 +1,12 @@
 import convict from "convict";
-import { COMMAND_NAMES } from "./commands";
+import { CommandNames, CommandPriorities } from "./commands";
 import { EvlConfig, Schema } from "./schema";
 import { existsSync } from "fs";
 
 const config = convict<EvlConfig>(Schema);
 
-config.set("commands", COMMAND_NAMES);
+config.set("commands", CommandNames);
+config.set("priorities", CommandPriorities);
 
 if (existsSync("./evl-daemon.json")) {
   config.loadFile("./evl-daemon.json");

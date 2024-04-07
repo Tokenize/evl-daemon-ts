@@ -1,5 +1,5 @@
 import convict from "convict";
-import { Command } from "../types";
+import { Command, CommandPriority } from "../types";
 
 export interface EvlConfig {
   ip: string;
@@ -8,6 +8,7 @@ export interface EvlConfig {
   zones: Record<string, string>;
   partitions: Record<number, string>;
   commands: Record<Command, string>;
+  priorities: Partial<Record<Command, CommandPriority>>;
 }
 
 export type EvlConfigSchema = convict.Schema<EvlConfig>;
@@ -43,5 +44,10 @@ export const Schema: EvlConfigSchema = {
     format: Object,
     default: null,
     arg: "commands",
+  },
+  priorities: {
+    format: Object,
+    default: null,
+    arg: "priorities",
   },
 };
