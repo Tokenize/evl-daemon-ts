@@ -1,7 +1,13 @@
-import { commandName, partitionName, payloadToString, zoneName } from "../app/util";
-import { Command, Data, Payload } from "../app/types";
+import {
+  commandName,
+  commandPriority,
+  partitionName,
+  payloadToString,
+  zoneName,
+} from "../app/util";
+import { Command, CommandPriority, Data, Payload } from "../app/types";
 import config from "../app/config/config";
-import { COMMAND_NAMES } from "../app/config/commands";
+import { CommandNames, CommandPriorities } from "../app/config/commands";
 
 describe("commandName", () => {
   test("should return command value if name not found", () => {
@@ -15,9 +21,29 @@ describe("commandName", () => {
 
   test("should return the command name string", () => {
     const command = Command.COMMAND_ACKNOWLEDGE;
-    const expected = COMMAND_NAMES[command];
+    const expected = CommandNames[command];
 
     const actual = commandName(command);
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("commandPriority", () => {
+  test("should return default low priority if priority not found", () => {
+    const command = "999";
+    const expected = CommandPriority.Low;
+
+    const actual = commandPriority(command as Command);
+
+    expect(actual).toEqual(expected);
+  });
+
+  test("should return the command priority", () => {
+    const command = Command.COMMAND_ERROR;
+    const expected = CommandPriorities[command];
+
+    const actual = commandPriority(command as Command);
 
     expect(actual).toEqual(expected);
   });
@@ -71,7 +97,7 @@ describe("payloadToString", () => {
   test("should only return command name for commands without zone or partition", () => {
     const command = Command.COMMAND_ACKNOWLEDGE;
     const payload = { command } as Payload;
-    const expected = COMMAND_NAMES[command];
+    const expected = CommandNames[command];
 
     const actual = payloadToString(payload);
 
