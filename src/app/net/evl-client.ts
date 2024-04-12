@@ -11,14 +11,25 @@ import { Command, Payload } from "../types";
 import { payloadToString } from "../util";
 import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
 
-export interface IEvlClient extends EventEmitter {
+export enum EvlEventNames {
+  CommandEvent = "COMMAND_EVENT",
+  DisconnectedEvent = "DISCONNECT_EVENT",
+}
+
+interface EvlClientEvents {
+  CommandEvent: (payload: Payload) => void;
+  DisconnectEvent: () => void;
+}
+
+export declare interface IEvlClient {
+  emit<U extends keyof EvlClientEvents>(event: U, ...args: Parameters<EvlClientEvents[U]>): boolean;
+
   connect(): void;
   send(data: string): void;
 }
 
-export enum EvlEventNames {
-  CommandEvent = "COMMAND_EVENT",
-  DisconnectedEvent = "DISCONNECT_EVENT",
+export declare interface IEvlEventHandler {
+  on<U extends keyof EvlClientEvents>(event: U, listener: EvlClientEvents[U]): void;
 }
 
 export type CommandEvent = EvlEventNames.CommandEvent;

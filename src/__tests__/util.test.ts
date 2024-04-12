@@ -1,7 +1,7 @@
-import { commandName, partitionName, payloadToString, zoneName } from "../app/util";
-import { Command, Data, Payload } from "../app/types";
-import config from "../app/config/config";
 import { COMMAND_NAMES } from "../app/config/commands";
+import config from "../app/config/config";
+import { Command, Data, Payload } from "../app/types";
+import { commandName, partitionName, payloadToString, zoneName } from "../app/util";
 
 describe("commandName", () => {
   test("should return command value if name not found", () => {
