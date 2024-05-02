@@ -14,5 +14,13 @@
   },
   "partitions": {
     "1": "Main"
-  }
+  },
+  "logging": [
+    {
+      "type": "console",
+      "level": "info",
+      "settings": {},
+      "format": ""
+    }
+  ]
 }
