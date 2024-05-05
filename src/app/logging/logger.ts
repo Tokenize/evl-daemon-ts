@@ -8,10 +8,8 @@ export enum LogPriority {
 
 export type LogMessageParameter = string | undefined | null;
 
-export abstract class Logger {
-  protected constructor(protected priority: LogPriority) {}
-
-  abstract log(priority: LogPriority, message: string, ...params: LogMessageParameter[]): void;
+export class Logger {
+  constructor(protected priority: LogPriority) {}
 
   logError(message: string, ...params: LogMessageParameter[]): void {
     this.log(LogPriority.Error, message, ...params);
@@ -32,17 +30,9 @@ export abstract class Logger {
   logTrace(message: string, ...params: LogMessageParameter[]): void {
     this.log(LogPriority.Trace, message, ...params);
   }
-}
 
-export class NullLogger extends Logger {
-  constructor(priority: LogPriority) {
-    super(priority);
-  }
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   log(priority: LogPriority, message: string, ...params: LogMessageParameter[]): void {
     return;
   }
-
-  /* eslint-enable */
 }
