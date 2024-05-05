@@ -19,5 +19,5 @@ module.exports = {
     },
   ],
   root: true,
-  ignorePatterns: ["dist"],
+  ignorePatterns: ["dist", "node_modules"],
 };
