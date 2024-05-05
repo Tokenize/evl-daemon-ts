@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "convict": "^6.2.4",
-    "convict-format-with-validator": "^6.2.0"
+    "convict-format-with-validator": "^6.2.0",
+    "winston": "^3.13.0"
   }
 }
