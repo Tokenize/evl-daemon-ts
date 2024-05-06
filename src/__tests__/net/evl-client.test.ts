@@ -1,4 +1,4 @@
-import { Logger, LogPriority } from "../../app/logging/logger";
+import { Logger } from "../../app/logging/logger";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
 import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
@@ -10,7 +10,7 @@ let connectMock: jest.SpyInstance;
 let sendMock: jest.SpyInstance;
 const loggerMock = jest.mock("../../app/logging/logger");
 
-const logger = new Logger(LogPriority.Debug);
+const logger = new Logger();
 
 beforeAll(() => {
   evlConnection = new EvlSocketConnection("localhost", 4025, logger);
