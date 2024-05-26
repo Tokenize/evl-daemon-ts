@@ -20,6 +20,8 @@ export type LogDestination = {
   settings: Record<string, string | number> | null;
 };
 
+export const TIMESTAMP_FORMAT = "YYYY-MM-DD HH:mm:ss:SSS";
+
 export class Logger {
   private _logger: winston.Logger;
 
@@ -76,11 +78,32 @@ export class Logger {
       case "console":
         return new winston.transports.Console({
           level: this.mapLogLevel(destination.level),
-          format: winston.format.simple(),
+          format: this.createFormat(destination.format),
         });
       default:
         return null;
     }
+  }
+
+  private createFormat(format: string): winston.Logform.Format {
+    switch (format) {
+      case "json":
+        return winston.format.json();
+      case "simple":
+      default:
+        return this.getSimpleFormat();
+    }
+  }
+
+  private getSimpleFormat(): winston.Logform.Format {
+    return winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
+      winston.format.splat(),
+      winston.format.printf((info) => {
+        return `[${info.timestamp}] ${info.level}: ${info.message}`;
+      }),
+    );
   }
 
   private mapLogLevel(level: LogLevel): string | undefined {
