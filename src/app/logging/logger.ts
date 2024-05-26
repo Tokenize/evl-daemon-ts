@@ -1,11 +1,11 @@
 import winston from "winston";
 
 export enum LogLevel {
-  Error,
-  Warning,
-  Info,
-  Debug,
-  Trace,
+  Error = "error",
+  Warning = "warning",
+  Info = "info",
+  Debug = "debug",
+  Trace = "trace",
 }
 
 export type LogDestinationType = "console" | "file";
