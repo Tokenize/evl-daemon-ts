@@ -1,3 +1,4 @@
+import winston from "winston";
 import { LogDestination, LogDestinationType, LogLevel, Logger } from "../../app/logging/logger";
 
 const mockLog = jest.fn();
@@ -6,6 +7,8 @@ const mockCreateLogger = jest.fn().mockReturnValue({
   log: mockLog,
   add: mockAdd,
 });
+
+winston.createLogger = mockCreateLogger;
 
 const consoleDestination: LogDestination = {
   type: "console",
@@ -22,19 +25,6 @@ const consoleDestination2: LogDestination = {
   format: "simple",
   settings: {},
 };
-
-jest.mock("winston", () => {
-  return {
-    createLogger: (): unknown => mockCreateLogger(),
-    format: {
-      simple: jest.fn(),
-    },
-    transports: {
-      Console: jest.fn(),
-      File: jest.fn(),
-    },
-  };
-});
 
 afterEach(() => {
   jest.clearAllMocks();
