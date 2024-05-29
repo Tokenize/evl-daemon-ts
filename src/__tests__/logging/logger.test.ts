@@ -154,6 +154,18 @@ describe("logging", () => {
     expect(mockLog).toHaveBeenCalledWith("info", "Test message");
   });
 
+  test("log should log a message to each destination with metadata", () => {
+    const logger = new Logger();
+    const destinations: LogDestination[] = [consoleDestination];
+
+    logger.addDestinations(destinations);
+
+    logger.log(LogLevel.Info, "Test message", { key: "value" });
+
+    expect(mockLog).toHaveBeenCalledTimes(1);
+    expect(mockLog).toHaveBeenCalledWith("info", "Test message", { key: "value" });
+  });
+
   it.each([
     ["logInfo", "info", "Info!"],
     ["logWarning", "warn", "Warning!"],

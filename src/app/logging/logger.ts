@@ -1,4 +1,5 @@
 import winston from "winston";
+import { Payload } from "../types";
 
 export enum LogLevel {
   Error = "error",
@@ -10,7 +11,12 @@ export enum LogLevel {
 
 export type LogDestinationType = "console" | "file";
 
-export type LogMessageParameter = string | undefined | null;
+type KnownLogParameters = {
+  payload: Payload;
+  error: boolean | Error;
+};
+
+export type LogParameters = Partial<KnownLogParameters> & Record<string, unknown>;
 
 export type LogDestination = {
   type: LogDestinationType;
@@ -99,9 +105,8 @@ export class Logger {
     return winston.format.combine(
       winston.format.colorize(),
       winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
-      winston.format.splat(),
       winston.format.printf((info) => {
-        return `[${info.timestamp}] ${info.level}: ${info.message}`;
+        return `[${info.timestamp}] ${info.level}: ${info.message}, ${JSON.stringify(info)}`;
       }),
     );
   }
@@ -110,29 +115,34 @@ export class Logger {
     return this._levelMap.get(level);
   }
 
-  public logError(message: string, ...params: LogMessageParameter[]): void {
-    this.log(LogLevel.Error, message, ...params);
+  public logError(message: string, params?: LogParameters): void {
+    this.log(LogLevel.Error, message, params);
   }
 
-  public logWarning(message: string, ...params: LogMessageParameter[]): void {
-    this.log(LogLevel.Warning, message, ...params);
+  public logWarning(message: string, params?: LogParameters): void {
+    this.log(LogLevel.Warning, message, params);
   }
 
-  public logInfo(message: string, ...params: LogMessageParameter[]): void {
-    this.log(LogLevel.Info, message, ...params);
+  public logInfo(message: string, params?: LogParameters): void {
+    this.log(LogLevel.Info, message, params);
   }
 
-  public logDebug(message: string, ...params: LogMessageParameter[]): void {
-    this.log(LogLevel.Debug, message, ...params);
+  public logDebug(message: string, params?: LogParameters): void {
+    this.log(LogLevel.Debug, message, params);
   }
 
-  public logTrace(message: string, ...params: LogMessageParameter[]): void {
-    this.log(LogLevel.Trace, message, ...params);
+  public logTrace(message: string, params?: LogParameters): void {
+    this.log(LogLevel.Trace, message, params);
   }
 
-  public log(level: LogLevel, message: string, ...params: LogMessageParameter[]): void {
+  public log(level: LogLevel, message: string, params?: LogParameters): void {
     const translatedLevel = this.mapLogLevel(level) ?? "info";
 
-    this._logger.log(translatedLevel, message, ...params);
+    if (params) {
+      this._logger.log(translatedLevel, message, params);
+      return;
+    } else {
+      this._logger.log(translatedLevel, message);
+    }
   }
 }
