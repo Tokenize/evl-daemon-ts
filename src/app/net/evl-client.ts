@@ -8,7 +8,6 @@ import {
   makeLoginPacket,
 } from "../tpi";
 import { Command, Payload } from "../types";
-import { payloadToString } from "../util";
 import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
 
 export interface IEvlClient extends EventEmitter {
@@ -80,7 +79,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleDataEvent(payload: Payload): void {
-    this._logger.logDebug("Received: %s", payloadToString(payload));
+    this._logger.logDebug("Received", { payload });
 
     if (payload.command === (Command.LOGIN as Command)) {
       this.handleLoginEvent(payload);
@@ -89,29 +88,29 @@ export class EvlClient extends EventEmitter implements IEvlClient {
     this.emit(EvlEventNames.CommandEvent, payload);
   }
 
-  private handleCloseEvent(hadError: boolean): void {
-    this._logger.logInfo("Disconnected! (%s)...", hadError?.toString());
+  private handleCloseEvent(error: boolean): void {
+    this._logger.logInfo("Disconnected", { error });
 
-    this.emit(EvlEventNames.DisconnectedEvent, hadError);
+    this.emit(EvlEventNames.DisconnectedEvent, error);
   }
 
-  private handleLoginEvent(login: Payload): void {
-    switch (login.data.value) {
+  private handleLoginEvent(payload: Payload): void {
+    switch (payload.data.value) {
       case LOGIN_REQUEST_PASSWORD:
-        this._logger.logDebug("Password requested, sending");
+        this._logger.logDebug("Password requested, sending", { payload });
         this.sendLoginCredentials();
         break;
       case LOGIN_REQUEST_TIMEOUT:
         // handle timeout
-        this._logger.logError("Device sent a timeout while waiting for password");
+        this._logger.logError("Device sent a timeout while waiting for password", { payload });
         break;
       case LOGIN_REQUEST_FAIL:
         // handle login fail
-        this._logger.logError("Invalid password, unable to connect");
+        this._logger.logError("Invalid password, unable to connect", { payload });
         break;
       case LOGIN_REQUEST_SUCCESS:
         // handle login success
-        this._logger.logDebug("Password valid, logged in to device");
+        this._logger.logDebug("Password valid, logged in to device", { payload });
         break;
     }
   }
