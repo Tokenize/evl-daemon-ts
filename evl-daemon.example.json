@@ -21,9 +21,19 @@
     "destinations": [
       {
         "type": "console",
-        "level": "info",
+        "name": "console",
+        "level": "debug",
         "settings": {},
-        "format": ""
+        "format": "simple"
+      },
+      {
+        "type": "file",
+        "name": "file",
+        "level": "debug",
+        "settings": {
+          "filename": "log.json"
+        },
+        "format": "json"
       }
     ]
   }
