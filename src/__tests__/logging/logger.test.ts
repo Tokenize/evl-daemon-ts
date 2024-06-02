@@ -26,20 +26,21 @@ const consoleDestination2: LogDestination = {
   settings: {},
 };
 
+const fileDestination: LogDestination = {
+  type: "file",
+  level: LogLevel.Info,
+  name: "file",
+  format: "json",
+  settings: {
+    filename: "test.log",
+  },
+};
+
 afterEach(() => {
   jest.clearAllMocks();
 });
 
 describe("addDestinations", () => {
-  test("should add a transport for each destination", () => {
-    const logger = new Logger();
-    const destinations: LogDestination[] = [consoleDestination];
-
-    logger.addDestinations(destinations);
-
-    expect(logger.count).toBe(1);
-  });
-
   test("should not add a transport for an invalid destination", () => {
     const logger = new Logger();
     const destinations: LogDestination[] = [
@@ -64,6 +65,21 @@ describe("addDestinations", () => {
     logger.addDestinations(destinations);
 
     expect(logger.count).toBe(2);
+  });
+
+  it.each([
+    ["console", consoleDestination],
+    ["file", fileDestination],
+  ])("should add a transport for %s destination", (type, destination) => {
+    const logger = new Logger();
+    const destinations: LogDestination[] = [destination];
+
+    logger.addDestinations(destinations);
+
+    const expectedDestination = logger.destinations.get(destination);
+
+    expect(expectedDestination).toBeDefined();
+    expect(expectedDestination).toHaveProperty("name", type);
   });
 
   test("should add a transport for each valid destination and ignore invalid destinations", () => {
@@ -115,20 +131,25 @@ describe("addDestinations", () => {
     }).toThrow();
   });
 
-  test("should throw an error if destination format is missing", () => {
+  it.each(["console", "file", undefined])("should set the correct format for %s", (format) => {
     const logger = new Logger();
     const destinations: LogDestination[] = [
       {
         type: "console",
         level: LogLevel.Info,
         name: "console",
+        format,
         settings: {},
-      } as unknown as LogDestination,
+      },
     ];
 
-    expect(() => {
-      logger.addDestinations(destinations);
-    }).toThrow();
+    const mapFormatSpy = jest.spyOn(Logger.prototype as never, "mapFormat");
+
+    logger.addDestinations(destinations);
+
+    expect(mapFormatSpy).toHaveBeenCalledTimes(1);
+    expect(mapFormatSpy).toHaveBeenCalledWith(format);
+    expect(mapFormatSpy).toHaveReturned();
   });
 
   test("should throw an error if destination is invalid", () => {

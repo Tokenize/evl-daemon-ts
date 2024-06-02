@@ -11,7 +11,7 @@ export enum LogLevel {
 
 export type LogDestinationType = "console" | "file";
 
-type KnownLogParameters = {
+export type KnownLogParameters = {
   payload: Payload;
   error: boolean | Error;
 };
@@ -22,16 +22,31 @@ export type LogDestination = {
   type: LogDestinationType;
   name: string;
   level: LogLevel;
-  format: string;
-  settings: Record<string, string | number> | null;
+  format?: string;
+  settings?: Record<string, string | number>;
 };
 
+export type LogDestinations = Map<LogDestination, winston.transport>;
+
 export const TIMESTAMP_FORMAT = "YYYY-MM-DD HH:mm:ss:SSS";
+
+export const JSON_FORMAT = winston.format.combine(
+  winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
+  winston.format.json(),
+);
+
+export const SIMPLE_FORMAT = winston.format.combine(
+  winston.format.colorize(),
+  winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
+  winston.format.printf((info) => {
+    return `[${info.timestamp}] ${info.level}: ${info.message}, ${JSON.stringify(info)}`;
+  }),
+);
 
 export class Logger {
   private _logger: winston.Logger;
 
-  private _destinations: Map<LogDestination, winston.transport> = new Map();
+  private _destinations: LogDestinations = new Map();
 
   private readonly _levelMap: Map<LogLevel, string> = new Map([
     [LogLevel.Error, "error"],
@@ -41,11 +56,20 @@ export class Logger {
     [LogLevel.Trace, "silly"],
   ]);
 
+  private readonly _formatMap: Map<string, winston.Logform.Format> = new Map([
+    ["json", JSON_FORMAT],
+    ["simple", SIMPLE_FORMAT],
+  ]);
+
   constructor(level: LogLevel = LogLevel.Info) {
     this._logger = winston.createLogger({
       level: this.mapLogLevel(level),
       format: winston.format.simple(),
     });
+  }
+
+  public get destinations(): LogDestinations {
+    return this._destinations;
   }
 
   public get count(): number {
@@ -70,10 +94,6 @@ export class Logger {
       throw new Error("Destination name is required");
     }
 
-    if (!destination.format) {
-      throw new Error("Destination format is required");
-    }
-
     if (this.mapLogLevel(destination.level) == null) {
       throw new Error("Invalid log level");
     }
@@ -82,33 +102,49 @@ export class Logger {
   private createTransport(destination: LogDestination): winston.transport | null {
     switch (destination.type) {
       case "console":
-        return new winston.transports.Console({
-          level: this.mapLogLevel(destination.level),
-          format: this.createFormat(destination.format),
-        });
+        return this.createConsoleTransport(destination);
+      case "file":
+        return this.createFileTransport(destination);
       default:
         return null;
     }
   }
 
-  private createFormat(format: string): winston.Logform.Format {
-    switch (format) {
-      case "json":
-        return winston.format.json();
-      case "simple":
-      default:
-        return this.getSimpleFormat();
-    }
+  private createConsoleTransport(
+    destination: LogDestination,
+  ): winston.transports.ConsoleTransportInstance {
+    return new winston.transports.Console({
+      level: this.mapLogLevel(destination.level),
+      format: this.mapFormat(destination.format),
+    });
   }
 
-  private getSimpleFormat(): winston.Logform.Format {
-    return winston.format.combine(
-      winston.format.colorize(),
-      winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
-      winston.format.printf((info) => {
-        return `[${info.timestamp}] ${info.level}: ${info.message}, ${JSON.stringify(info)}`;
-      }),
-    );
+  private createFileTransport(
+    destination: LogDestination,
+  ): winston.transports.FileTransportInstance | null {
+    if (!destination.settings) {
+      throw new Error("File destination requires settings");
+    }
+
+    const filename = destination.settings.filename as string;
+
+    if (!filename) {
+      throw new Error("File destination requires filename");
+    }
+
+    return new winston.transports.File({
+      filename,
+      level: this.mapLogLevel(destination.level),
+      format: this.mapFormat(destination.format),
+    });
+  }
+
+  private mapFormat(format: string | null | undefined): winston.Logform.Format {
+    if (!format) {
+      return SIMPLE_FORMAT;
+    }
+
+    return this._formatMap.get(format) ?? SIMPLE_FORMAT;
   }
 
   private mapLogLevel(level: LogLevel): string | undefined {
