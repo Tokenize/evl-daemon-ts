@@ -1,3 +1,5 @@
+const loggerMock = jest.mock("../../app/logging/logger");
+
 import { Logger } from "../../app/logging/logger";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
@@ -8,7 +10,6 @@ let evlConnection: EvlSocketConnection;
 let evlClient: EvlClient;
 let connectMock: jest.SpyInstance;
 let sendMock: jest.SpyInstance;
-const loggerMock = jest.mock("../../app/logging/logger");
 
 const logger = new Logger();
 
