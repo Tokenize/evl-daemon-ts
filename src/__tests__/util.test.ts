@@ -1,3 +1,13 @@
+jest.mock("../app/config/config", () => ({
+  partitions: {},
+  zones: {},
+  commands: CommandNames,
+  priorities: CommandPriorities,
+}));
+
+import { CommandNames, CommandPriorities } from "../app/config/commands";
+import config from "../app/config/config";
+import { Command, CommandPriority, Data, Payload } from "../app/types";
 import {
   commandName,
   commandPriority,
@@ -5,9 +15,6 @@ import {
   payloadToString,
   zoneName,
 } from "../app/util";
-import { Command, CommandPriority, Data, Payload } from "../app/types";
-import config from "../app/config/config";
-import { CommandNames, CommandPriorities } from "../app/config/commands";
 
 describe("commandName", () => {
   test("should return command value if name not found", () => {

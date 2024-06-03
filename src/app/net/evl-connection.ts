@@ -58,7 +58,7 @@ export class EvlSocketConnection extends EventEmitter implements IEvlConnection 
 
     const written = this._socket.write(buffer, (e?) => {
       if (e) {
-        this._logger.logError("Error while sending: %s", e.message);
+        this._logger.logError("Error while sending", { error: e });
       }
     });
 
@@ -88,7 +88,7 @@ export class EvlSocketConnection extends EventEmitter implements IEvlConnection 
     const lastPacket = packets.pop();
 
     if (lastPacket !== "") {
-      this._logger.logError("Received incomplete data: %s", lastPacket);
+      this._logger.logError("Received incomplete data", { data: lastPacket });
     }
 
     packets.forEach((packet) => {

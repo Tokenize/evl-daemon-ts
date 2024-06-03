@@ -14,5 +14,27 @@
   },
   "partitions": {
     "1": "Main"
+  },
+  "logging": {
+    "level": "info",
+    "format": "",
+    "destinations": [
+      {
+        "type": "console",
+        "name": "console",
+        "level": "debug",
+        "settings": {},
+        "format": "simple"
+      },
+      {
+        "type": "file",
+        "name": "file",
+        "level": "debug",
+        "settings": {
+          "filename": "log.json"
+        },
+        "format": "json"
+      }
+    ]
   }
 }

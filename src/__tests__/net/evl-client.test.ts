@@ -1,4 +1,6 @@
-import { LogPriority, NullLogger } from "../../app/logging/logger";
+const loggerMock = jest.mock("../../app/logging/logger");
+
+import { Logger } from "../../app/logging/logger";
 import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
 import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
@@ -9,7 +11,7 @@ let evlClient: EvlClient;
 let connectMock: jest.SpyInstance;
 let sendMock: jest.SpyInstance;
 
-const logger = new NullLogger(LogPriority.Error);
+const logger = new Logger();
 
 beforeAll(() => {
   evlConnection = new EvlSocketConnection("localhost", 4025, logger);
@@ -19,6 +21,8 @@ beforeAll(() => {
   connectMock = jest.spyOn(EvlSocketConnection.prototype, "connect").mockImplementation(() => {});
 
   sendMock = jest.spyOn(EvlSocketConnection.prototype, "send").mockImplementation(() => {});
+
+  loggerMock.clearAllMocks();
 });
 
 beforeEach(() => {

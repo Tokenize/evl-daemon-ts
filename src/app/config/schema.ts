@@ -1,4 +1,5 @@
 import convict from "convict";
+import { LogDestination, LogLevel } from "../logging/logger";
 import { Command, CommandPriority } from "../types";
 
 export interface EvlConfig {
@@ -9,9 +10,16 @@ export interface EvlConfig {
   partitions: Record<number, string>;
   commands: Record<Command, string>;
   priorities: Partial<Record<Command, CommandPriority>>;
+  logging: LoggerConfiguration;
 }
 
 export type EvlConfigSchema = convict.Schema<EvlConfig>;
+
+export type LoggerConfiguration = {
+  level: LogLevel;
+  format: string;
+  destinations: LogDestination[];
+};
 
 export const Schema: EvlConfigSchema = {
   ip: {
@@ -49,5 +57,10 @@ export const Schema: EvlConfigSchema = {
     format: Object,
     default: null,
     arg: "priorities",
+  },
+  logging: {
+    format: Object,
+    default: null,
+    arg: "logging",
   },
 };

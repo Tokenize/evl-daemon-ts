@@ -7,7 +7,7 @@
     {
       "label": "npm: build",
       "type": "npm",
-      "script": "build",
+      "script": "precli",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -17,11 +17,10 @@
   ],
   "configurations": [
     {
-      "type": "node",
+      "command": "npm run cli",
+      "name": "Run cli",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/dist/src/app/cli.js",
+      "type": "node-terminal",
       "preLaunchTask": "npm: build"
     }
   ]
