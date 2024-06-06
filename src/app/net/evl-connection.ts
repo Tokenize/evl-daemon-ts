@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { Socket, createConnection } from "net";
-import { Logger } from "../logging/logger";
-import { getPayload } from "../tpi";
+import { Logger } from "../logging/logger.js";
+import { getPayload } from "../tpi.js";
 
 export enum EvlConnectionEvent {
   Connected = "CONNECTED",
@@ -20,7 +20,7 @@ export interface IEvlConnection extends EventEmitter {
 export class EvlSocketConnection extends EventEmitter implements IEvlConnection {
   private _ip: string;
   private _port: number;
-  private _connected: boolean = false;
+  private _connected = false;
 
   private _logger: Logger;
   private _socket: Socket | null;
@@ -44,9 +44,15 @@ export class EvlSocketConnection extends EventEmitter implements IEvlConnection 
       return;
     }
 
-    this._socket = createConnection(this._port, this._ip, () => this.handleConnectedEvent())
-      .on("data", (data: Buffer) => this.handleDataEvent(data))
-      .on("close", (handleError: boolean) => this.handleCloseEvent(handleError));
+    this._socket = createConnection(this._port, this._ip, () => {
+      this.handleConnectedEvent();
+    })
+      .on("data", (data: Buffer) => {
+        this.handleDataEvent(data);
+      })
+      .on("close", (handleError: boolean) => {
+        this.handleCloseEvent(handleError);
+      });
   }
 
   public send(data: string): void {

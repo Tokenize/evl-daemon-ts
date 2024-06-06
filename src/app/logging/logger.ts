@@ -1,5 +1,5 @@
 import winston from "winston";
-import { Payload } from "../types";
+import { Payload } from "../types.js";
 
 export enum LogLevel {
   Error = "error",
@@ -11,20 +11,20 @@ export enum LogLevel {
 
 export type LogDestinationType = "console" | "file";
 
-export type KnownLogParameters = {
+export interface KnownLogParameters {
   payload: Payload;
   error: boolean | Error;
-};
+}
 
 export type LogParameters = Partial<KnownLogParameters> & Record<string, unknown>;
 
-export type LogDestination = {
+export interface LogDestination {
   type: LogDestinationType;
   name: string;
   level: LogLevel;
   format?: string;
   settings?: Record<string, string | number>;
-};
+}
 
 export type LogDestinations = Map<LogDestination, winston.transport>;
 
@@ -39,6 +39,7 @@ export const SIMPLE_FORMAT = winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp({ format: TIMESTAMP_FORMAT }),
   winston.format.printf((info) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `[${info.timestamp}] ${info.level}: ${info.message}, ${JSON.stringify(info)}`;
   }),
 );
@@ -48,7 +49,7 @@ export class Logger {
 
   private _destinations: LogDestinations = new Map();
 
-  private readonly _levelMap: Map<LogLevel, string> = new Map([
+  private readonly _levelMap = new Map<LogLevel, string>([
     [LogLevel.Error, "error"],
     [LogLevel.Warning, "warn"],
     [LogLevel.Info, "info"],
@@ -56,7 +57,7 @@ export class Logger {
     [LogLevel.Trace, "silly"],
   ]);
 
-  private readonly _formatMap: Map<string, winston.Logform.Format> = new Map([
+  private readonly _formatMap = new Map<string, winston.Logform.Format>([
     ["json", JSON_FORMAT],
     ["simple", SIMPLE_FORMAT],
   ]);

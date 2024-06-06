@@ -3,6 +3,8 @@
   "include": ["./*.ts", "src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
     "sourceMap": true,
     "outDir": "dist"
   }

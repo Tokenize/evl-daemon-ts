@@ -1,6 +1,6 @@
 import convict from "convict";
-import { LogDestination, LogLevel } from "../logging/logger";
-import { Command, CommandPriority } from "../types";
+import { LogDestination, LogLevel } from "../logging/logger.js";
+import { Command, CommandPriority } from "../types.js";
 
 export interface EvlConfig {
   ip: string;
@@ -8,18 +8,18 @@ export interface EvlConfig {
   password: string;
   zones: Record<string, string>;
   partitions: Record<number, string>;
-  commands: Record<Command, string>;
+  commands: Partial<Record<Command, string>>;
   priorities: Partial<Record<Command, CommandPriority>>;
   logging: LoggerConfiguration;
 }
 
 export type EvlConfigSchema = convict.Schema<EvlConfig>;
 
-export type LoggerConfiguration = {
+export interface LoggerConfiguration {
   level: LogLevel;
   format: string;
   destinations: LogDestination[];
-};
+}
 
 export const Schema: EvlConfigSchema = {
   ip: {

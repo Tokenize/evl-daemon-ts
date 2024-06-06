@@ -1,6 +1,6 @@
-import config from "./config/config";
-import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi";
-import { Command, CommandPriority, Payload } from "./types";
+import config from "./config/config.js";
+import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi.js";
+import { Command, CommandPriority, Payload } from "./types.js";
 
 export function payloadToString(payload: Payload): string {
   const command = commandName(payload.command);
@@ -20,14 +20,14 @@ export function payloadToString(payload: Payload): string {
 
     friendly = `${command}, Partition: ${partition}`;
   } else {
-    friendly = `${command}`;
+    friendly = command;
   }
 
   return friendly;
 }
 
 export function commandName(command: Command): string {
-  return config.commands[command] ?? command;
+  return config.commands[command] ?? command.toString();
 }
 
 export function commandPriority(command: Command): CommandPriority {

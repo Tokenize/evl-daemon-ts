@@ -1,7 +1,7 @@
-import config from "./config/config";
-import { Logger } from "./logging/logger";
-import { EvlClient, EvlEventNames } from "./net/evl-client";
-import { EvlSocketConnection } from "./net/evl-connection";
+import config from "./config/config.js";
+import { Logger } from "./logging/logger.js";
+import { EvlClient, EvlEventNames } from "./net/evl-client.js";
+import { EvlSocketConnection } from "./net/evl-connection.js";
 
 console.log("Welcome to EvlDaemon.");
 
