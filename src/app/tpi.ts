@@ -1,4 +1,4 @@
-import { Command, Data, Payload } from "./types";
+import { Command, Data, Payload } from "./types.js";
 
 export const COMMAND_LENGTH = 3;
 
@@ -47,15 +47,15 @@ export const PARTITION_ZONE_COMMANDS: Command[] = [
   Command.ZONE_TAMPER_RESTORE,
 ];
 
-export const LOGIN_REQUEST_PASSWORD: string = "3";
+export const LOGIN_REQUEST_PASSWORD = "3";
 
-export const LOGIN_REQUEST_TIMEOUT: string = "2";
+export const LOGIN_REQUEST_TIMEOUT = "2";
 
-export const LOGIN_REQUEST_SUCCESS: string = "1";
+export const LOGIN_REQUEST_SUCCESS = "1";
 
-export const LOGIN_REQUEST_FAIL: string = "0";
+export const LOGIN_REQUEST_FAIL = "0";
 
-export const PACKET_TERMINATOR: string = "\r\n";
+export const PACKET_TERMINATOR = "\r\n";
 
 export function validate(input: string): boolean {
   if (input.length < COMMAND_LENGTH + CHECKSUM_LENGTH) {
@@ -119,7 +119,7 @@ export function parseData(input: string): Data {
     return { value, zone, partition };
   }
 
-  const command = parseCommand(input) as Command;
+  const command = parseCommand(input);
 
   value = input.substring(COMMAND_LENGTH, input.length - CHECKSUM_LENGTH);
 

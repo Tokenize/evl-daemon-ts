@@ -1,14 +1,14 @@
 import EventEmitter from "events";
-import { Logger } from "../logging/logger";
+import { Logger } from "../logging/logger.js";
 import {
   LOGIN_REQUEST_FAIL,
   LOGIN_REQUEST_PASSWORD,
   LOGIN_REQUEST_SUCCESS,
   LOGIN_REQUEST_TIMEOUT,
   makeLoginPacket,
-} from "../tpi";
-import { Command, Payload } from "../types";
-import { EvlConnectionEvent, IEvlConnection } from "./evl-connection";
+} from "../tpi.js";
+import { Command, Payload } from "../types.js";
+import { EvlConnectionEvent, IEvlConnection } from "./evl-connection.js";
 
 export interface IEvlClient extends EventEmitter {
   connect(): void;
@@ -64,13 +64,13 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private addEventListeners(): void {
-    this._connection.addListener(EvlConnectionEvent.Data, (data: Payload) =>
-      this.handleDataEvent(data),
-    );
+    this._connection.addListener(EvlConnectionEvent.Data, (data: Payload) => {
+      this.handleDataEvent(data);
+    });
 
-    this._connection.addListener(EvlConnectionEvent.Disconnected, (hadError: boolean) =>
-      this.handleCloseEvent(hadError),
-    );
+    this._connection.addListener(EvlConnectionEvent.Disconnected, (hadError: boolean) => {
+      this.handleCloseEvent(hadError);
+    });
   }
 
   public addListener(event: EvlEvent, handler: EvlClientEventHandler<EvlEvent>): this {

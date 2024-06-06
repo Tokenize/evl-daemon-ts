@@ -1,4 +1,4 @@
-import { Command, CommandPriority } from "../types";
+import { Command, CommandPriority } from "../types.js";
 
 export const CommandNames: Record<Command, string> = {
   "000": "Poll",

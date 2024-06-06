@@ -81,20 +81,20 @@ export enum CommandPriority {
   Critical,
 }
 
-export type Data = {
+export interface Data {
   partition: number;
   zone: string;
   value: string;
-};
+}
 
-export type Event = {
+export interface Event {
   command: Command;
   data: Data;
   length: number;
-};
+}
 
-export type Payload = {
+export interface Payload {
   command: Command;
   data: Data;
   checksum: string;
-};
+}

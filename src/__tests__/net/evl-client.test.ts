@@ -1,10 +1,10 @@
 const loggerMock = jest.mock("../../app/logging/logger");
 
-import { Logger } from "../../app/logging/logger";
-import { EvlClient, EvlEventNames } from "../../app/net/evl-client";
-import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection";
-import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi";
-import { Command, Payload } from "../../app/types";
+import { Logger } from "../../app/logging/logger.js";
+import { EvlClient, EvlEventNames } from "../../app/net/evl-client.js";
+import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection.js";
+import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi.js";
+import { Command, Payload } from "../../app/types.js";
 
 let evlConnection: EvlSocketConnection;
 let evlClient: EvlClient;
@@ -18,9 +18,11 @@ beforeAll(() => {
 
   evlClient = new EvlClient(evlConnection, "password", logger);
 
-  connectMock = jest.spyOn(EvlSocketConnection.prototype, "connect").mockImplementation(() => {});
+  connectMock = jest
+    .spyOn(EvlSocketConnection.prototype, "connect")
+    .mockImplementation(() => void 0);
 
-  sendMock = jest.spyOn(EvlSocketConnection.prototype, "send").mockImplementation(() => {});
+  sendMock = jest.spyOn(EvlSocketConnection.prototype, "send").mockImplementation(() => void 0);
 
   loggerMock.clearAllMocks();
 });

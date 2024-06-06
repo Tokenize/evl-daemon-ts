@@ -5,16 +5,16 @@ jest.mock("../app/config/config", () => ({
   priorities: CommandPriorities,
 }));
 
-import { CommandNames, CommandPriorities } from "../app/config/commands";
-import config from "../app/config/config";
-import { Command, CommandPriority, Data, Payload } from "../app/types";
+import { CommandNames, CommandPriorities } from "../app/config/commands.js";
+import config from "../app/config/config.js";
+import { Command, CommandPriority, Data, Payload } from "../app/types.js";
 import {
   commandName,
   commandPriority,
   partitionName,
   payloadToString,
   zoneName,
-} from "../app/util";
+} from "../app/util.js";
 
 describe("commandName", () => {
   test("should return command value if name not found", () => {
@@ -38,19 +38,19 @@ describe("commandName", () => {
 
 describe("commandPriority", () => {
   test("should return default low priority if priority not found", () => {
-    const command = "999";
+    const command = "999" as Command;
     const expected = CommandPriority.Low;
 
-    const actual = commandPriority(command as Command);
+    const actual = commandPriority(command);
 
     expect(actual).toEqual(expected);
   });
 
   test("should return the command priority", () => {
-    const command = Command.COMMAND_ERROR;
+    const command = Command.COMMAND_ERROR as Command;
     const expected = CommandPriorities[command];
 
-    const actual = commandPriority(command as Command);
+    const actual = commandPriority(command);
 
     expect(actual).toEqual(expected);
   });

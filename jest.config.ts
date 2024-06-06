@@ -6,6 +6,7 @@ const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
   collectCoverage: true,
+  moduleNameMapper: { "(.+)\\.js": "$1" },
 };
 
 export default config;

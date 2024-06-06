@@ -1,5 +1,5 @@
 import winston from "winston";
-import { LogDestination, LogDestinationType, LogLevel, Logger } from "../../app/logging/logger";
+import { LogDestination, LogDestinationType, LogLevel, Logger } from "../../app/logging/logger.js";
 
 const mockLog = jest.fn();
 const mockAdd = jest.fn();

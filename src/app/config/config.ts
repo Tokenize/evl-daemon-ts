@@ -1,6 +1,6 @@
 import convict from "convict";
-import { CommandNames, CommandPriorities } from "./commands";
-import { EvlConfig, Schema } from "./schema";
+import { CommandNames, CommandPriorities } from "./commands.js";
+import { EvlConfig, Schema } from "./schema.js";
 import { existsSync } from "fs";
 
 const config = convict<EvlConfig>(Schema);

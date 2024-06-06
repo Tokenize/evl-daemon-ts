@@ -9,8 +9,8 @@ import {
   parsePartition,
   parseZone,
   validate,
-} from "../app/tpi";
-import { Command } from "../app/types";
+} from "../app/tpi.js";
+import { Command } from "../app/types.js";
 
 test("parseCommand should return the parsed command", () => {
   const input = "500AB";
