@@ -28,11 +28,6 @@ export type EvlClientEventHandler<T extends EvlEvent> = T extends EvlEvent.Comma
   : DisconnectEventHandler;
 
 export class EvlClient extends EventEmitter implements IEvlClient {
-  private _connection: IEvlConnection;
-  private readonly _password: string;
-  private readonly _logger: Logger;
-
-  constructor(connection: IEvlConnection, password: string, logger: Logger) {
   constructor(
     private readonly connection: IEvlConnection,
     private readonly password: string,
