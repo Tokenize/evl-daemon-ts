@@ -33,37 +33,38 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   private readonly _logger: Logger;
 
   constructor(connection: IEvlConnection, password: string, logger: Logger) {
+  constructor(
+    private readonly connection: IEvlConnection,
+    private readonly password: string,
+    private readonly logger: Logger,
+  ) {
     super();
-
-    this._connection = connection;
-    this._password = password;
-    this._logger = logger;
 
     this.addEventListeners();
   }
 
   public connect(): void {
-    if (this._connection.connected) {
+    if (this.connection.connected) {
       return;
     }
 
-    this._connection.connect();
+    this.connection.connect();
   }
 
   public send(data: string): void {
-    if (!this._connection.connected) {
+    if (!this.connection.connected) {
       throw Error("Unable to send, connection isn't active");
     }
 
-    this._connection.send(data);
+    this.connection.send(data);
   }
 
   private addEventListeners(): void {
-    this._connection.addListener(EvlConnectionEvent.Data, (data: Payload) => {
+    this.connection.addListener(EvlConnectionEvent.Data, (data: Payload) => {
       this.handleDataEvent(data);
     });
 
-    this._connection.addListener(EvlConnectionEvent.Disconnected, (hadError: boolean) => {
+    this.connection.addListener(EvlConnectionEvent.Disconnected, (hadError: boolean) => {
       this.handleCloseEvent(hadError);
     });
   }
@@ -74,7 +75,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleDataEvent(payload: Payload): void {
-    this._logger.logDebug("Received", { payload });
+    this.logger.logDebug("Received", { payload });
 
     if (payload.command === (Command.LOGIN as Command)) {
       this.handleLoginEvent(payload);
@@ -84,7 +85,7 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleCloseEvent(error: boolean): void {
-    this._logger.logInfo("Disconnected", { error });
+    this.logger.logInfo("Disconnected", { error });
 
     this.emit(EvlEvent.DisconnectedEvent, error);
   }
@@ -92,26 +93,26 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   private handleLoginEvent(payload: Payload): void {
     switch (payload.data.value) {
       case LOGIN_REQUEST_PASSWORD:
-        this._logger.logDebug("Password requested, sending", { payload });
+        this.logger.logDebug("Password requested, sending", { payload });
         this.sendLoginCredentials();
         break;
       case LOGIN_REQUEST_TIMEOUT:
         // handle timeout
-        this._logger.logError("Device sent a timeout while waiting for password", { payload });
+        this.logger.logError("Device sent a timeout while waiting for password", { payload });
         break;
       case LOGIN_REQUEST_FAIL:
         // handle login fail
-        this._logger.logError("Invalid password, unable to connect", { payload });
+        this.logger.logError("Invalid password, unable to connect", { payload });
         break;
       case LOGIN_REQUEST_SUCCESS:
         // handle login success
-        this._logger.logDebug("Password valid, logged in to device", { payload });
+        this.logger.logDebug("Password valid, logged in to device", { payload });
         break;
     }
   }
 
   private sendLoginCredentials(): void {
-    const packet = makeLoginPacket(this._password);
+    const packet = makeLoginPacket(this.password);
 
     this.send(packet);
   }
