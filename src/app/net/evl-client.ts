@@ -15,20 +15,15 @@ export interface IEvlClient extends EventEmitter {
   send(data: string): void;
 }
 
-export enum EvlEventNames {
+export enum EvlEvent {
   CommandEvent = "COMMAND_EVENT",
   DisconnectedEvent = "DISCONNECT_EVENT",
 }
 
-export type CommandEvent = EvlEventNames.CommandEvent;
-export type DisconnectEvent = EvlEventNames.DisconnectedEvent;
-
 export type CommandEventHandler = (payload: Payload) => void;
 export type DisconnectEventHandler = (hadError: boolean) => void;
 
-export type EvlEvent = CommandEvent | DisconnectEvent;
-
-export type EvlClientEventHandler<T extends EvlEvent> = T extends CommandEvent
+export type EvlClientEventHandler<T extends EvlEvent> = T extends EvlEvent.CommandEvent
   ? CommandEventHandler
   : DisconnectEventHandler;
 
@@ -85,13 +80,13 @@ export class EvlClient extends EventEmitter implements IEvlClient {
       this.handleLoginEvent(payload);
     }
 
-    this.emit(EvlEventNames.CommandEvent, payload);
+    this.emit(EvlEvent.CommandEvent, payload);
   }
 
   private handleCloseEvent(error: boolean): void {
     this._logger.logInfo("Disconnected", { error });
 
-    this.emit(EvlEventNames.DisconnectedEvent, error);
+    this.emit(EvlEvent.DisconnectedEvent, error);
   }
 
   private handleLoginEvent(payload: Payload): void {

@@ -1,6 +1,6 @@
 import config from "./config/config.js";
 import { Logger } from "./logging/logger.js";
-import { EvlClient, EvlEventNames } from "./net/evl-client.js";
+import { EvlClient, EvlEvent } from "./net/evl-client.js";
 import { EvlSocketConnection } from "./net/evl-connection.js";
 
 console.log("Welcome to EvlDaemon.");
@@ -16,7 +16,7 @@ logger.addDestinations(config.logging.destinations);
 const evlConnection = new EvlSocketConnection(ip, port, logger);
 const evlClient = new EvlClient(evlConnection, password, logger);
 
-evlClient.addListener(EvlEventNames.DisconnectedEvent, () => {
+evlClient.addListener(EvlEvent.DisconnectedEvent, () => {
   logger.logInfo(`Disconnected from EVL device.`);
 });
 evlClient.connect();
