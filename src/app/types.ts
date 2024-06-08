@@ -87,14 +87,8 @@ export interface Data {
   value: string;
 }
 
-export interface Event {
-  command: Command;
-  data: Data;
-  length: number;
-}
+export type Payload =
+  | { command: Exclude<Command, Command.SOFTWARE_DISCONNECT>; data: Data; checksum: string }
+  | { command: Command.SOFTWARE_DISCONNECT; data: boolean; checksum: string };
 
-export interface Payload {
-  command: Command;
-  data: Data;
-  checksum: string;
-}
+export type SystemEvent = Omit<Payload, "checksum">;

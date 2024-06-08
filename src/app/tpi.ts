@@ -99,7 +99,7 @@ export function getPayload(input: string): Payload {
   const checksum = parseChecksum(input);
   const data = parseData(input);
 
-  return { command, data, checksum };
+  return { command, data, checksum } as Payload;
 }
 
 export function parseCommand(input: string): Command {

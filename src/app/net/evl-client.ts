@@ -86,22 +86,31 @@ export class EvlClient extends EventEmitter implements IEvlClient {
   }
 
   private handleLoginEvent(payload: Payload): void {
+    if (typeof payload.data === "boolean") {
+      const message = "Received unexpected login response";
+      this.logger.logError(message, { payload });
+      throw Error(message);
+    }
+
     switch (payload.data.value) {
       case LOGIN_REQUEST_PASSWORD:
         this.logger.logDebug("Password requested, sending", { payload });
         this.sendLoginCredentials();
         break;
       case LOGIN_REQUEST_TIMEOUT:
-        // handle timeout
+        // TODO: handle timeout
         this.logger.logError("Device sent a timeout while waiting for password", { payload });
         break;
       case LOGIN_REQUEST_FAIL:
-        // handle login fail
+        // TODO: handle login fail
         this.logger.logError("Invalid password, unable to connect", { payload });
         break;
       case LOGIN_REQUEST_SUCCESS:
-        // handle login success
+        // TODO: handle login success
         this.logger.logDebug("Password valid, logged in to device", { payload });
+        break;
+      default:
+        this.logger.logWarning("Unknown login request", { payload });
         break;
     }
   }

@@ -6,6 +6,10 @@ export function payloadToString(payload: Payload): string {
   const command = commandName(payload.command);
   let friendly: string;
 
+  if (typeof payload.data === "boolean") {
+    return payload.data ? "true" : "false";
+  }
+
   if (ZONE_COMMANDS.includes(payload.command)) {
     const zone = zoneName(payload.data.zone);
 
