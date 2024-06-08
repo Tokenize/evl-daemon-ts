@@ -1,13 +1,13 @@
 import config from "./config/config.js";
 import { PARTITION_COMMANDS, PARTITION_ZONE_COMMANDS, ZONE_COMMANDS } from "./tpi.js";
-import { Command, CommandPriority, Payload } from "./types.js";
+import { Command, CommandPriority, Payload, SystemEvent } from "./types.js";
 
-export function payloadToString(payload: Payload): string {
+export function payloadToString(payload: Payload | SystemEvent): string {
   const command = commandName(payload.command);
   let friendly: string;
 
   if (typeof payload.data === "boolean") {
-    return payload.data ? "true" : "false";
+    return `${command}, Value: ${payload.data ? "true" : "false"}`;
   }
 
   if (ZONE_COMMANDS.includes(payload.command)) {
