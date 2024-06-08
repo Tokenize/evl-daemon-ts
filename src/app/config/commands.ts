@@ -115,6 +115,7 @@ export const CommandPriorities: Partial<Record<Command, CommandPriority>> = {
   [Command.MASTER_CODE_REQUIRED]: CommandPriority.High,
   [Command.INSTALLERS_CODE_REQUIRED]: CommandPriority.High,
   [Command.SOFTWARE_ZONE_ALARM]: CommandPriority.High,
+  [Command.SOFTWARE_DISCONNECT]: CommandPriority.High,
 
   [Command.COMMAND_ERROR]: CommandPriority.Critical,
   [Command.SYSTEM_ERROR]: CommandPriority.Critical,
