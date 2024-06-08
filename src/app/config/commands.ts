@@ -74,6 +74,7 @@ export const CommandNames: Record<Command, string> = {
   "921": "Master Code Required",
   "922": "Installers Code Required",
   S01: "Software Zone Alarm",
+  S02: "Software Disconnect",
 };
 
 export const CommandPriorities: Partial<Record<Command, CommandPriority>> = {

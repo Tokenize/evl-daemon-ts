@@ -72,6 +72,7 @@ export enum Command {
   MASTER_CODE_REQUIRED = "921",
   INSTALLERS_CODE_REQUIRED = "922",
   SOFTWARE_ZONE_ALARM = "S01",
+  SOFTWARE_DISCONNECT = "S02",
 }
 
 export enum CommandPriority {
