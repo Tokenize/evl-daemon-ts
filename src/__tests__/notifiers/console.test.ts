@@ -1,3 +1,12 @@
+jest.mock("../../app/config/config.ts", () => ({
+  partitions: {},
+  zones: {},
+  commands: CommandNames,
+  priorities: CommandPriorities,
+}));
+
+import { CommandNames, CommandPriorities } from "../../app/config/commands.js";
+
 import { Broadcaster } from "../../app/notifiers/broadcaster.js";
 import { Console } from "../../app/notifiers/console.js";
 import { Command, CommandPriority, Payload } from "../../app/types.js";
