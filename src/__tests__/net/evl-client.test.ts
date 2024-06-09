@@ -1,7 +1,7 @@
 const loggerMock = jest.mock("../../app/logging/logger");
 
 import { Logger } from "../../app/logging/logger.js";
-import { EvlClient, EvlEventNames } from "../../app/net/evl-client.js";
+import { EvlClient, EvlEvent } from "../../app/net/evl-client.js";
 import { EvlConnectionEvent, EvlSocketConnection } from "../../app/net/evl-connection.js";
 import { LOGIN_REQUEST_PASSWORD, makeLoginPacket } from "../../app/tpi.js";
 import { Command, Payload } from "../../app/types.js";
@@ -97,7 +97,7 @@ test("should send login credentials when login event received", () => {
 test("should emit disconnect event when disconnected", () => {
   const disconnectEventMock = jest.fn();
 
-  evlClient.addListener(EvlEventNames.DisconnectedEvent, disconnectEventMock);
+  evlClient.addListener(EvlEvent.DisconnectedEvent, disconnectEventMock);
 
   evlConnection.emit(EvlConnectionEvent.Disconnected);
 
@@ -112,7 +112,7 @@ test("should emit data event when data is received", () => {
     data: { value: "123" },
   } as Payload;
 
-  evlClient.addListener(EvlEventNames.CommandEvent, dataEventMock);
+  evlClient.addListener(EvlEvent.CommandEvent, dataEventMock);
 
   evlConnection.emit(EvlConnectionEvent.Data, dataPayload);
 

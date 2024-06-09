@@ -72,6 +72,7 @@ export enum Command {
   MASTER_CODE_REQUIRED = "921",
   INSTALLERS_CODE_REQUIRED = "922",
   SOFTWARE_ZONE_ALARM = "S01",
+  SOFTWARE_DISCONNECT = "S02",
 }
 
 export enum CommandPriority {
@@ -87,14 +88,8 @@ export interface Data {
   value: string;
 }
 
-export interface Event {
-  command: Command;
-  data: Data;
-  length: number;
-}
+export type Payload =
+  | { command: Exclude<Command, Command.SOFTWARE_DISCONNECT>; data: Data; checksum: string }
+  | { command: Command.SOFTWARE_DISCONNECT; data: boolean; checksum: string };
 
-export interface Payload {
-  command: Command;
-  data: Data;
-  checksum: string;
-}
+export type SystemEvent = Omit<Payload, "checksum">;

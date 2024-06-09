@@ -152,4 +152,16 @@ describe("payloadToString", () => {
 
     expect(actual).toEqual(expected);
   });
+
+  test("should include boolean data for boolean payloads", () => {
+    const command = Command.SOFTWARE_DISCONNECT;
+    const data = true;
+    const payload = { command, data } as Payload;
+
+    const expected = `${commandName(command)}, Value: true`;
+
+    const actual = payloadToString(payload);
+
+    expect(actual).toEqual(expected);
+  });
 });
