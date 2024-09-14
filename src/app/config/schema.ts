@@ -11,6 +11,7 @@ export interface EvlConfig {
   commands: Partial<Record<Command, string>>;
   priorities: Partial<Record<Command, CommandPriority>>;
   logging: LoggerConfiguration;
+  notifiers: NotifierConfiguration[];
 }
 
 export type EvlConfigSchema = convict.Schema<EvlConfig>;
@@ -19,6 +20,14 @@ export interface LoggerConfiguration {
   level: LogLevel;
   format: string;
   destinations: LogDestination[];
+}
+
+export interface NotifierConfiguration {
+  type: string;
+  name: string;
+  priority: CommandPriority;
+  settings: Record<string, string | number | boolean>;
+  enabled: boolean;
 }
 
 export const Schema: EvlConfigSchema = {
@@ -62,5 +71,10 @@ export const Schema: EvlConfigSchema = {
     format: Object,
     default: null,
     arg: "logging",
+  },
+  notifiers: {
+    format: Object,
+    default: null,
+    arg: "notifiers",
   },
 };
