@@ -1,3 +1,5 @@
+jest.mock("../../app/config/config.ts", () => ({}));
+
 import { Broadcaster } from "../../app/notifiers/broadcaster.js";
 import { Command } from "../../app/types.js";
 import { NotifierType } from "../../app/notifiers/notifier.js";
