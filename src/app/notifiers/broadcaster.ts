@@ -1,15 +1,18 @@
-import { Command, CommandPriority, Payload, SystemEvent } from "../types.js";
-
-export interface Notifier {
-  priority: CommandPriority;
-  notify(event: SystemEvent): void;
-}
+import { Command, Payload } from "../types.js";
+import { createNotifier, Notifier, NotifierDestination } from "./notifier.js";
 
 export class Broadcaster {
   private readonly _notifiers: Notifier[] = [];
 
   get count(): number {
     return this._notifiers.length;
+  }
+
+  addNotifiers(destinations: NotifierDestination[]): void {
+    destinations.forEach((destination) => {
+      const notifier = createNotifier(destination);
+      this._notifiers.push(notifier);
+    });
   }
 
   addNotifier(notifier: Notifier): void {

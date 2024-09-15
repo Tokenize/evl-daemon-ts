@@ -1,6 +1,7 @@
 import convict from "convict";
 import { LogDestination, LogLevel } from "../logging/logger.js";
 import { Command, CommandPriority } from "../types.js";
+import { NotifierDestination } from "../notifiers/notifier.js";
 
 export interface EvlConfig {
   ip: string;
@@ -11,7 +12,7 @@ export interface EvlConfig {
   commands: Partial<Record<Command, string>>;
   priorities: Partial<Record<Command, CommandPriority>>;
   logging: LoggerConfiguration;
-  notifiers: NotifierConfiguration[];
+  notifiers: NotifierDestination[];
 }
 
 export type EvlConfigSchema = convict.Schema<EvlConfig>;
@@ -20,14 +21,6 @@ export interface LoggerConfiguration {
   level: LogLevel;
   format: string;
   destinations: LogDestination[];
-}
-
-export interface NotifierConfiguration {
-  type: string;
-  name: string;
-  priority: CommandPriority;
-  settings: Record<string, string | number | boolean>;
-  enabled: boolean;
 }
 
 export const Schema: EvlConfigSchema = {
@@ -73,7 +66,7 @@ export const Schema: EvlConfigSchema = {
     arg: "logging",
   },
   notifiers: {
-    format: Object,
+    format: Array,
     default: null,
     arg: "notifiers",
   },

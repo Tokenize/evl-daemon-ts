@@ -8,7 +8,7 @@ jest.mock("../../app/config/config.ts", () => ({
 import { CommandNames, CommandPriorities } from "../../app/config/commands.js";
 
 import { Broadcaster } from "../../app/notifiers/broadcaster.js";
-import { Console } from "../../app/notifiers/console.js";
+import Console from "../../app/notifiers/console.js";
 import { Command, CommandPriority, Payload } from "../../app/types.js";
 
 const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => void 0);
@@ -19,7 +19,7 @@ describe("console notifier", () => {
   });
 
   it("write a message to the console", () => {
-    const notifier = new Console();
+    const notifier = new Console("test");
     const broadcaster = new Broadcaster();
     broadcaster.addNotifier(notifier);
 
@@ -32,20 +32,20 @@ describe("console notifier", () => {
   });
 
   it("should use the default priority if none is provided", () => {
-    const notifier = new Console();
+    const notifier = new Console("test");
 
     expect(notifier.priority).toBe(CommandPriority.Low);
   });
 
   it("should use the provided priority", () => {
     const priority = CommandPriority.High;
-    const notifier = new Console(priority);
+    const notifier = new Console("test", priority);
 
     expect(notifier.priority).toBe(priority);
   });
 
   it("should not notify when the priority isn't met", () => {
-    const notifier = new Console(CommandPriority.High);
+    const notifier = new Console("test", CommandPriority.High);
     const broadcaster = new Broadcaster();
     broadcaster.addNotifier(notifier);
 
@@ -60,7 +60,7 @@ describe("console notifier", () => {
   });
 
   it("should notify when the priority is met", () => {
-    const notifier = new Console(CommandPriority.Low);
+    const notifier = new Console("test", CommandPriority.Low);
     const broadcaster = new Broadcaster();
     broadcaster.addNotifier(notifier);
 

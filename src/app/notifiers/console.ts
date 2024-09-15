@@ -1,15 +1,31 @@
-import { Notifier } from "./broadcaster.js";
-import { CommandPriority, SystemEvent } from "../types.js";
+import { CommandPriority, Settings, SystemEvent } from "../types.js";
 import { commandPriority, payloadToString } from "../util.js";
+import { Notifier } from "./notifier.js";
 
-export class Console implements Notifier {
-  private readonly _priority: CommandPriority;
+export default class Console implements Notifier {
+  private _priority: CommandPriority;
+  private _settings: Settings = {};
+  private _enabled = true;
+  private _name;
 
   get priority(): CommandPriority {
     return this._priority;
   }
 
-  constructor(priority?: CommandPriority) {
+  get settings(): Settings {
+    return this._settings;
+  }
+
+  get enabled(): boolean {
+    return this._enabled;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  constructor(name: string, priority?: CommandPriority) {
+    this._name = name;
     this._priority = priority ?? CommandPriority.Low;
   }
 
