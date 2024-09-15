@@ -3,8 +3,7 @@ import { Logger } from "./logging/logger.js";
 import { EvlClient, EvlEvent } from "./net/evl-client.js";
 import { EvlSocketConnection } from "./net/evl-connection.js";
 import { Broadcaster } from "./notifiers/broadcaster.js";
-import { Console } from "./notifiers/console.js";
-import { CommandPriority, Payload } from "./types.js";
+import { Payload } from "./types.js";
 
 console.log("Welcome to EvlDaemon.");
 
@@ -18,7 +17,7 @@ logger.addDestinations(config.logging.destinations);
 
 const broadcaster = new Broadcaster();
 
-broadcaster.addNotifier(new Console(CommandPriority.Low));
+broadcaster.addNotifiers(config.notifiers);
 
 const evlConnection = new EvlSocketConnection(ip, port, logger);
 const evlClient = new EvlClient(evlConnection, password, logger);

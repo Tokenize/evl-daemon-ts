@@ -93,3 +93,5 @@ export type Payload =
   | { command: Command.SOFTWARE_DISCONNECT; data: boolean; checksum: string };
 
 export type SystemEvent = Omit<Payload, "checksum">;
+
+export type Settings = Record<string, string | number | boolean>;
